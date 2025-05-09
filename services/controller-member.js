@@ -100,18 +100,37 @@ var controller ={
        // res.render("member-viewadds", {title: "user home page", data: data })
     await res.redirect("/member/viewadds")
     },
-    updateimgpost : async function(req, res){
-        //var cid = req.body.id
-        console.log("id:",)
-        console.log("inside controller function img")
+    // updateimgpost : async function(req, res){
+    //     //var cid = req.body.id
+    //     console.log("id:",)
+    //     console.log("inside controller function img")
+    //     var form = new formidable.IncomingForm();
+    //     dbController.insertimg(req, form,) 
+    //   //  var data = currlogin
+    //     // req.session.loginuserId 
+    //     // req.session.loginuserEmail 
+    //    // res.render("member-viewadds", {title: "user home page", data: data })
+    // await res.redirect("/member/viewadds")
+    // },
+
+    updateimgpost: async function(req, res) {
         var form = new formidable.IncomingForm();
-        dbController.insertimg(req, form,) 
-      //  var data = currlogin
-        // req.session.loginuserId 
-        // req.session.loginuserEmail 
-       // res.render("member-viewadds", {title: "user home page", data: data })
-    await res.redirect("/member/viewadds")
-    },
+    
+        dbController.insertimg(req, form, function(err) {
+            if (err) {
+                console.log("Image upload error:", err,req.body.id);
+                return res.render("staff-upload-view1", {
+                    title: "Add Advertisement",
+                    errorMsg: err,
+                    id: req.body.id
+                });
+            }
+    
+            // On success
+            res.redirect("/member/viewadds");
+        });
+    }
+,    
 
     delete :function(req,res,id){
         var id = req.params.id
@@ -150,7 +169,7 @@ view:async function(req,res){
 var id=req.params.id
  var ad= await dbController.getbyid(id)
  if(ad!= null){
- var imageurl="/public/media/"+ad._id+"."+ad.image
+ var imageurl="/media/"+ad._id+"."+ad.image
  console.log("image:",imageurl)
  res.render("ad-view",{data:ad,imageurl:imageurl})}
  else{

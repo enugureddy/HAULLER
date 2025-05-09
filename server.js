@@ -27,6 +27,7 @@ member.use(session({
 app.use("/member",member)
 
 app.use(express.static('upload'));
+app.use(express.static('public'));
 
 var memberroute = require("./services/routes-member")
 

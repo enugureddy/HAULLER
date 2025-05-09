@@ -86,57 +86,96 @@ function insertAd(req, form,id)
     })
 
 }
-function insertimg(req, form,cid)
-{
-    console.log("inside controller img")
-    //getting collection
-   // var collection = db.collection("add")
+// function insertimg(req, form,cid)
+// {
+//     console.log("inside controller img")
+//     //getting collection
+//    // var collection = db.collection("add")
 
-    form.parse(req, function(err, fields, files){
-        console.log("inside formidable function img")
-        //collecting information about the file upload
-        var oldPath = files.adimage.filepath; //temp location 
-        var extension = files.adimage.originalFilename.split('.').pop()
+//     form.parse(req, function(err, fields, files){
+//         console.log("inside formidable function img")
+//         //collecting information about the file upload
+//         var oldPath = files.adimage.filepath; //temp location 
+//         var extension = files.adimage.originalFilename.split('.').pop()
 
-        var adId = fields.id //new id generated //_id.exten ::: for eg: 123123123123.png
-        //u want to show a full details of ad
-        //ip: ad._id
-        //u can get the advertise detail from db using ad id
-        //retrieved ad, u can get ad.image (extension)
-        //_id.extension
-        console.log("addid:",adId)
+//         var adId = fields.id //new id generated //_id.exten ::: for eg: 123123123123.png
+//         //u want to show a full details of ad
+//         //ip: ad._id
+//         //u can get the advertise detail from db using ad id
+//         //retrieved ad, u can get ad.image (extension)
+//         //_id.extension
+//         console.log("addid:",adId)
 
-        var newFileNameName = "./public/media/" + adId + "." + extension;
+//         var newFileNameName = "./public/media/" + adId + "." + extension;
 
-        //read
-        fs.readFile(oldPath, function(err, data){
-            if(err)
-            {
-                console.log("Error in upload : ", err)
-                return
-            }
-            //write
-            fs.writeFile(newFileNameName, data, function(err){
-                if(err)
-                {
-                    console.log("Error in upload2 : ", err)
-                    console.log(newFileNameName)
-                    return   
-                }
-                console.log("image updated at:",newFileNameName)
+//         //read
+//         fs.readFile(oldPath, function(err, data){
+//             if(err)
+//             {
+//                 console.log("Error in upload : ", err)
+//                 return
+//             }
+//             //write
+//             fs.writeFile(newFileNameName, data, function(err){
+//                 if(err)
+//                 {
+//                     console.log("Error in upload2 : ", err)
+//                     console.log(newFileNameName)
+//                     return   
+//                 }
+//                 console.log("image updated at:",newFileNameName)
 
-            })
-        })
+//             })
+//         })
 
-        /*
-        if( extension === 'png' || extension === 'jpg' )
-        {
-            var newFileName = __dirname + "/media/" + files.adimage.originalFilename;
+//         /*
+//         if( extension === 'png' || extension === 'jpg' )
+//         {
+//             var newFileName = __dirname + "/media/" + files.adimage.originalFilename;
+//         }
+//         */
+//     })
+
+// }
+
+function insertimg(req, form, callback) {
+    form.parse(req, function(err, fields, files) {
+        if (err) {
+            console.log("Form parse error:", err);
+            return callback("Form parse error");
         }
-        */
-    })
 
+        const adId = fields.id;
+        const file = files.adimage;
+        const extension = file.originalFilename.split('.').pop().toLowerCase();
+
+        if (extension !== 'jpg') {
+            return callback("Only JPG files are allowed");
+        }
+
+        const oldPath = file.filepath;
+        const newFileName = "./public/media/" + adId + ".jpg";
+
+        fs.readFile(oldPath, function(err, data) {
+            if (err) {
+                console.log("Error reading file:", err);
+                return callback("Error reading file");
+            }
+
+            fs.writeFile(newFileName, data, function(err) {
+                if (err) {
+                    console.log("Error writing file:", err);
+                    return callback("Error writing file");
+                }
+
+                console.log("Image updated at:", newFileName);
+                callback(null); // success
+            });
+        });
+    });
 }
+
+
  function getbyid(id)
  {
      var collection=db.collection("add")
