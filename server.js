@@ -1,12 +1,13 @@
 const express=require('express')
 const session=require('express-session')
 var app=express()
-var port=4910
+
 const formidable = require('formidable')
 const fs = require('fs')
 var dateTime = require('node-datetime');
 var bodyParser=require('body-parser')
-
+require('dotenv').config();
+var port=process.env.PORT
 var member=express()
 
 var admin=express()

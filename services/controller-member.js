@@ -59,6 +59,7 @@ var controller ={
         else{
             var password = user.password
             var name = user.name
+            console.log("password:", password)
             //send this email
             emailController.send(email, "thirumalreddyenugu@gmail.com", "Password Recovery", "Dear "+name+" , your password is  " + "<b>" + "" + password + "</b>")
             res.render("member-login", {title : "member Login Page"})
