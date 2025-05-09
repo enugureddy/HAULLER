@@ -16,6 +16,26 @@ Hauller is a logistics-based platform that connects users with drivers for trans
 - MVC Model: Followed the Model-View-Controller design pattern using EJS as the view engine.
 - Database: Utilized MongoDB to store and manage application data.
 
+## Features Added:[SUJAY/ROLES BASED ACCESS]
+
+- Admin Role: 
+            -Login authentication
+            -viewing all registered members
+            -View and monitor ads for every member
+            -ability to request information from -selected members with customizable  description box.
+
+-Guest Role: 
+            -No login and can enter platform without registration
+            -viewing all ads
+            -restricting interaction with registered members
+            -limited privileges with no ad listing
+
+- CRUD Operations: modified create, read, update, and delete functionality individually for guest and admin roles.
+
+- Database: Utilized MongoDB to manage application data for guest and admin access restriction.
+
+- MVC Model: Followed the Model-View-Controller design pattern using EJS as the view engine.
+
 ---
 
 ## Technologies Used:
@@ -38,3 +58,8 @@ Hauller is a logistics-based platform that connects users with drivers for trans
 ## RUN Instructions:
    cd HAULLER
    node server.js or nodemon server.js
+
+## Versions:
+   Node- v22.14.0
+   @sendgrid/mail: v8.1.5,
+   express: v4.17.2,
