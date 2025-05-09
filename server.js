@@ -9,6 +9,9 @@ var bodyParser=require('body-parser')
 
 var member=express()
 
+var admin=express()
+var guest=express()
+
 app.use(bodyParser.urlencoded({
     extended:true
 }))
@@ -16,6 +19,8 @@ app.use(bodyParser.urlencoded({
 app.set("view engine","ejs")
 member.set("view engine","ejs")
 
+admin.set("view engine","ejs")
+guest.set("view engine","ejs")
 
 member.use(session({
     secret:"member",
@@ -23,16 +28,35 @@ member.use(session({
     saveUninitialized:true
 }))
 
+admin.use(session({
+    secret:"member",
+    resave:true,
+    saveUninitialized:true
+}))
+
+guest.use(session({
+    secret:"member",
+    resave:true,
+    saveUninitialized:true
+}))
 
 app.use("/member",member)
+
+app.use("/admin",admin)
+app.use("/guest",guest)
 
 app.use(express.static('upload'));
 app.use(express.static('public'));
 
 var memberroute = require("./services/routes-member")
 
+var adminroute = require("./services/routes-admin")
+var guestroute = require("./services/routes-guest")
+
 memberroute(member)
 
+adminroute(admin)
+guestroute(guest)
 
 app.listen(port,function(err,res){
     if(err){
