@@ -1,5 +1,6 @@
 const sgMail = require('@sendgrid/mail')
-sgMail.setApiKey("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")
+const url = process.env.SENDGRID_API_KEY
+sgMail.setApiKey(url)
 
 var sendMail = {
     send : function(toEmail, fromEmail, subject, html){
@@ -16,7 +17,7 @@ var sendMail = {
             subject: subject,
             html: html
           }
-
+console.log(toEmail,fromEmail)
           sgMail
             .send(msg)
             .then(() => {
