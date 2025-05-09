@@ -31,7 +31,7 @@ var dbController = {
                 console.log("Err in database server connection")
                 return
             }
-            db = database.db("faster")
+            db = database.db("hauller")
             console.log("DB Connected from admin")
         })
     },
