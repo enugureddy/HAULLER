@@ -1,7 +1,7 @@
 const mongodb = require('mongodb')
 const mongoClient = require('mongodb').MongoClient
 const fs=require('fs')
-var url = "mongodb+srv://thirumalreddyenugu:Vw6LPeMk01yIjPHs@hauller-cluster.zsxen3j.mongodb.net/"
+var url = process.env.MONGO_URI
 var db;
 
 function loginmember(email,password){
