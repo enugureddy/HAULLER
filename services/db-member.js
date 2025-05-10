@@ -211,10 +211,8 @@ var dbController = {
     },
     viewAdds : function(id,res){
         var collection = db.collection("add")
-        var filter1={
-            "id":id
-        }
-        collection.find(filter1).toArray(function(err,result){
+      
+        collection.find().toArray(function(err,result){
             if(err){
                 console.log("Err in view")
                 return
