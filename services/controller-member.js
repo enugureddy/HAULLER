@@ -5,7 +5,7 @@ const fs = require('fs')
 
 dbController.dbController.connection()
 var currlogin
-var currentloginuser
+let currentloginuser
 
 var controller ={
     login : function(req,res){
