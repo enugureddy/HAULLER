@@ -5,10 +5,11 @@ const fs = require('fs')
 
 dbController.dbController.connection()
 var currlogin
-var currentloginuser
+let currentloginuser
 
 var controller ={
     login : function(req,res){
+
         res.render("member-login",{title : "Member Login Page",data : null})
     },
     loginverify : async function(req,res){
@@ -16,10 +17,10 @@ var controller ={
         var password = req.body.password
 
         var data = await dbController.loginmember(email, password)
-        currlogin = data
+       
       
         if (data != null)
-        {   
+        {    req.session.member = data
             currentloginuser=data._id.toString()
            // res.render("member-viewadds", {title : "Member Home Page", data : data})
 
@@ -182,6 +183,10 @@ var id=req.params.id
 
     logout : function(req, res){
         req.session.destroy( function(err){
+            if (err) {
+                console.log('Logout error:', err);
+                return res.status(500).send('Error logging out');
+              }
             console.log("session destroyed")
         })  
         res.render("member-login", {title : "Member Login Page"})

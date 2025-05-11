@@ -1,6 +1,8 @@
 const mongodb = require('mongodb')
 const mongoClient = require('mongodb').MongoClient
 const fs=require('fs')
+//const cloudinary = require('cloudinary').v2
+const cloudinary = require('../config/cloudinary')
 var url = process.env.MONGO_URI
 var db;
 
@@ -40,42 +42,50 @@ function insertAd(req, form,id)
         var timestamp = Date.now();
         var currentDateTime = new Date();  
 
+        (async function run() {
+            const image = oldPath;
+            const result = await cloudinary.uploader.upload(oldPath);
+            console.log(`Successfully uploaded ${image}`);
+            console.log(`> Result: ${result.secure_url}`);
+            var adData = {
+                'id' : id,
+                'name' : name,
+                'description' : description,
+                'price': price,
+                'image' : result.secure_url,
+                'timestamp' : timestamp,
+                'adDateTime' : currentDateTime
+            }
+            collection.insertOne(adData)
+          })();
+
         //insert to db
-        var adData = {
-            'id' : id,
-            'name' : name,
-            'description' : description,
-            'price': price,
-            'image' : extension,
-            'timestamp' : timestamp,
-            'adDateTime' : currentDateTime
-        }
-        collection.insertOne(adData)
-        var adId = adData._id //new id generated //_id.exten ::: for eg: 123123123123.png
+    
+         //new id generated //_id.exten ::: for eg: 123123123123.png
         //u want to show a full details of ad
         //ip: ad._id
         //u can get the advertise detail from db using ad id
         //retrieved ad, u can get ad.image (extension)
         //_id.extension
 
-        var newFileNameName = "./public/media/" + adId + "." + extension;
+        // var newFileNameName = "./public/media/" + adId + "." + extension;
 
-        //read
-        fs.readFile(oldPath, function(err, data){
-            if(err)
-            {
-                console.log("Error in upload : ", err)
-                return
-            }
-            //write
-            fs.writeFile(newFileNameName, data, function(err){
-                if(err)
-                {
-                    console.log("Error in upload2 : ", err)
-                    return   
-                }
-            })
-        })
+        // //read
+        // fs.readFile(oldPath, function(err, data){
+        //     if(err)
+        //     {
+        //         console.log("Error in upload : ", err)
+        //         return
+        //     }
+        //     //write
+        //     fs.writeFile(newFileNameName, data, function(err){
+        //         if(err)
+        //         {
+        //             console.log("Error in upload2 : ", err)
+        //             return   
+        //         }
+        //     })
+        // })
 
         /*
         if( extension === 'png' || extension === 'jpg' )
@@ -211,10 +221,8 @@ var dbController = {
     },
     viewAdds : function(id,res){
         var collection = db.collection("add")
-        var filter1={
-            "id":id
-        }
-        collection.find(filter1).toArray(function(err,result){
+      
+        collection.find().toArray(function(err,result){
             if(err){
                 console.log("Err in view")
                 return
