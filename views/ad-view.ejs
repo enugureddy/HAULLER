@@ -1,42 +1,86 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <title>Ad Image</title>
     <style>
-        .formdes{
-            padding: 2%;
-            
-        width: 30%;
-        margin-top: 4%;
-        align-items: center;
-        margin-left: 35%;
-        border-radius: 20px ;
-        height: 40rem;
-box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .2); 
-
-background-color: rgba(255, 255, 255, .15);
-
-backdrop-filter: blur(5px);
+        body {
+            background: url('https://img.freepik.com/free-vector/classic-american-pickup-truck-concept_1284-40664.jpg?semt=ais_hybrid&w=740') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Open Sans', sans-serif;
         }
 
-        body{
-        background: url('https://cdn.pixabay.com/photo/2016/08/17/04/43/template-1599667_1280.png');
-        background-repeat: no-repeat;
-        background-size: cover;
+        .formdes {
+            padding: 2rem;
+            width: 35%;
+            min-width: 400px;
+            max-width: 600px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            background-color: whitesmoke;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1, h2 {
+            color: rgb(0, 0, 0);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            text-align: center;
+            margin: 0.5rem 0;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+        }
+
+        .image-container {
+            width: 100%;
+            height: 300px; /* Fixed height for consistency */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            border-radius: 10px;
+            background-color: rgb(65, 56, 56);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-bottom: 1rem;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Maintains aspect ratio while fitting within container */
+            object-position: center;
         }
     </style>
-    <title>
-        ad image
-    </title>
-    <body>
-        <form class="formdes">
-           
-     <h1 style="font-family: sans-serif;"> <center><%=data.name%></center></h1>
-     
-     <h2 style="font-family: sans-serif;"><center><%=data.description%></center></h2>
-      <center><img src=<%=data.image%> />  </center>
-     
-    
-    </form>
-    </body>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
 </head>
+
+<body>
+    <form class="formdes">
+        <h1><%=data.name%></h1>
+        <h2><%=data.description%></h2>
+        
+        <div class="image-container">
+            <img src= <%=data.image%> alt="Advertisement Image" />
+        </div>
+    </form>
+</body>
 </html>

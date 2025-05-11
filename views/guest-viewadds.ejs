@@ -1,93 +1,150 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <style>
-            .mainhead{
-                background: url(https://cdn.pixabay.com/photo/2019/04/26/07/14/store-4156934_1280.png);
-                padding: 30px;
-                background-repeat: no-repeat;
-background-size: cover;
-box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .2); 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List of Ads - fastr</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Open+Sans&display=swap" rel="stylesheet">
     
-    background-color: rgba(255, 255, 255, .15);
-    
-    backdrop-filter: blur(5px);
-            }
-        </style>
+    <style>
+        body {
+            background: lightblue no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            font-family: 'Open Sans', sans-serif;
+            padding: 20px;
+            color: white;
+        }
 
-        <title> List of students </title>
-        <!-- CSS only -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-        <!-- JavaScript Bundle with Popper -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-    </head>
-    
+        .glass-card {
+            background-color: whitesmoke;
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            padding: 20px;
+            margin-bottom: 20px;
+            color: white;
+        }
 
-    <body class="mainhead">
-        <nav class="navbar" style="padding: 1%;box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .2); 
-    
-        background-color: rgba(255, 255, 255, .15);
+        .navbar {
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 0;
+        }
+
+        .btn-danger {
+            font-weight: bold;
+            transition: all 0.3s ease;
+            padding: 8px 20px;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .table {
+            width: 100%;
+            color: rgb(0, 0, 0);
+            margin-top: 20px;
+        }
+
+        .table th {
+            font-weight: 700;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-bottom: 2px solid rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .table td {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        .table tr:hover td {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        a {
+            color: #000000;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            padding: 5px 10px;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        a:hover {
+            color: #000000;
+            background-color: rgba(255, 255, 255, 0.2);
+            text-decoration: none;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            font-family: 'Montserrat', sans-serif;
+            text-align: center;
+            color: rgb(0, 0, 0);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar glass-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <h1 style="color: rgb(0, 0, 0);">Welcome to Hauller !</h1>
+            <button class="btn btn-danger" onclick="window.location.href = 'logout';">Logout</button>
+        </div>
+    </nav>
+
+    <div class="glass-card">
+        <div class="page-title">Your Ads</div>
         
-        backdrop-filter: blur(5px);border-radius: 10px; ">
-            <h1 style="color: rgb(255, 255, 255);">Welcome to fastr.</h1>
-          
-           
-            <button class="btn btn-danger btnAction" onclick="window.location.href = 'logout';" style="margin-left: 20%;">Logout</button>
-          </nav>
-        <br>
-        <table class="table" style="text-align: center;margin-top:2%;box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .2); 
-    
-        background-color: rgba(255, 255, 255, .15);
-        
-        backdrop-filter: blur(5px);">
-            <span style="font-size: 25px;color:black;font-family: 'Times New Roman', Times, serif;"> your adds <b></b> </span>
-            
-            <thead class="thead-dark">
-            <tr>
-                <th>Name </th>
-                <th>Description</th>
-                <th>Time Created</th>
-                <th>Price</th>
-                <th>Image</th>
-                <th>Contact</th>
-                
-            </tr>
-        </thead>
-            <%
-            if( addData.length > 0 )
-            {
-                addData.forEach(function (data){
-                    
-                    %>
-
-                    <tr>
-                        <td><%=data.name%></td>
-                        <td><%=data.description%></td>
-                        <td><% var dObj = new Date(data.timestamp)
-                            var date = dObj.getDate()+"/"+(dObj.getMonth()+1)+"/"+dObj.getFullYear()+" "+ dObj.getHours()+":"+dObj.getMinutes()+":"+dObj.getSeconds() %>
-                            <%=date%></td>
-                        <td><%=data.price%></td>
-                        
-                        <td><a class="" href="/guest/view/<%=data._id%>"> view </a></td>
-                        <td><a class="" href="/guest/contact/<%=data._id%>"> contact </a></td>
-                       
-                           
-                           
-                    </tr>
-
-                    <%
-
-                })
-            }
-            %>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Time Created</th>
+                    <th>Price</th>
+                    <th>Image</th>
+                    <th>Contact</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if( addData.length > 0 ) { 
+                    addData.forEach(function (data){ %>
+                        <tr>
+                            <td><%=data.name%></td>
+                            <td><%=data.description%></td>
+                            <td><% var dObj = new Date(data.timestamp)
+                                var date = dObj.getDate()+"/"+(dObj.getMonth()+1)+"/"+dObj.getFullYear()+" "+ dObj.getHours()+":"+dObj.getMinutes()+":"+dObj.getSeconds() %>
+                                <%=date%>
+                            </td>
+                            <td><%=data.price%></td>
+                            <td><a href="/guest/view/<%=data._id%>">view</a></td>
+                            <td><a href="/guest/contact/<%=data._id%>">contact</a></td>
+                        </tr>
+                    <% });
+                } %>
+            </tbody>
         </table>
-    </body>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>
-<script lang="javascript">
-    
-var oRows = document.getElementById('table').getElementsByTagName('tr');
-var iRowCount = oRows.length;
-
-
-
-</script>
