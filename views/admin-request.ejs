@@ -1,63 +1,128 @@
-<!doctype html>
-    <head>
-        <style>
-            .formdes{
-                padding: 2%;
-                
-            width: 35%;
-            margin-top: 10%;
-            align-items: center;
-            margin-left: 30%;
-            border-radius: 20px ;
-            height: 30rem;
-box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .2); 
-
-background-color: rgba(255, 255, 255, .15);
-
-backdrop-filter: blur(5px);
-            }
-
-            body{
-            background: url('https://cdn.pixabay.com/photo/2018/02/22/11/18/envelope-3172770_1280.png');
-            background-repeat: no-repeat;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%=title%></title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Open+Sans&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            background: lightblue;
             background-size: cover;
-            }
-        </style>
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
 
-        <!-- CSS only -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-        <!-- JavaScript Bundle with Popper -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+        .formdes {
+            padding: 2.5rem;
+            width: 40%;
+            min-width: 400px;
+            max-width: 600px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 black;
+            background-color: whitesmoke;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        h3 {
+            text-align: center;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            color: rgb(0, 0, 0);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+
+        .form-control {
+            background-color: rgba(255, 255, 255, 0.25);
+            border: none;
+            color: rgb(0, 0, 0);
+            padding: 12px;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-control:read-only {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: rgba(0, 0, 0, 0.7);
+        }
+
+        .form-control::placeholder {
+            color: rgba(0, 0, 0, 0.7);
+        }
+
+        .form-control:focus {
+            background-color: rgba(255, 255, 255, 0.35);
+            color: rgb(0, 0, 0);
+            box-shadow: none;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        label {
+            color: rgb(0, 0, 0) !important;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            display: block;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            padding: 12px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background-color: #0069d9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+    </style>
+</head>
+
+<body>
+    <form action="/admin/requestpost" method="POST" class="formdes">
+        <h3>Request Information</h3>
         
-        <title>
-             <%title%>
-        </title>
-    </head>
+        <div class="mb-3">
+            <label>Ad ID</label>
+            <input type="text" class="form-control" id="id" name="id" value="<%=mdata._id %>" readonly required>
+        </div>
+        
+        <div class="mb-3">
+            <label>Your Email</label>
+            <input type="text" class="form-control" id="email" name="email" value="<%=mdata.email %>" readonly required>
+        </div>
+        
+        <div class="mb-3">
+            <label>Request Details</label>
+            <textarea class="form-control" id="description" name="description" placeholder="Please describe your request in detail..." required></textarea>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Submit Request</button>
+    </form>
 
-    <body>
-        <form action="/admin/requestpost" method="POST" class="formdes"  >
-            <h3 style="color: rgb(0, 0, 0);"><center>Request Info</center></h3><br>
-            <div class="mb-3">
-                <label>add ID</label>
-                <input type="text" class="form-control" id="id" name="id" value="<%=mdata._id %>" readonly required>
-              </div>
-              <div class="mb-3">
-                <label>Email</label>
-                <input type="text" class="form-control" id="email" name="email" value="<%=mdata.email %>" readonly required>
-              </div>
-           
-           
-           
-              <div class="mb-3">
-                <label style="color: rgb(0, 0, 0);">Description</label>
-                <textarea type="text" class="form-control" id="description" name="description" placeholder=" Add description" required></textarea>
-              </div>
-             
-             
-              
-             
-              <button type="submit" class="btn btn-primary w-100">Request</button> 
-          </form>
-    </body>
-
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>

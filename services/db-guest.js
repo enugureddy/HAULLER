@@ -1,6 +1,6 @@
 const mongodb = require('mongodb')
 const mongoClient = require('mongodb').MongoClient
-var url = "mongodb://localhost:27017"
+var url = process.env.MONGO_URI
 var db;
 
 
@@ -23,7 +23,7 @@ var dbController = {
                 console.log("Err in database server connection")
                 return
             }
-            db = database.db("faster")
+            db = database.db("hauller")
             console.log("DB Connected from Student")
         })
     },
