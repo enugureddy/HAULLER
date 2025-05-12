@@ -197,4 +197,184 @@
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Listings</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Open+Sans&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            background: lightblue no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            font-family: 'Open Sans', sans-serif;
+            padding: 20px;
+            color: white;
+        }
+
+        .glass-card {
+            background-color: white;
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            padding: 20px;
+            margin-bottom: 20px;
+            color: rgb(0, 0, 0);
+        }
+
+        .navbar {
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 0;
+        }
+
+        .primary-actions {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .primary-action-btn {
+            font-weight: bold;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            min-width: 220px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .primary-action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+
+        .secondary-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-action {
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .card img {
+            height: 200px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar glass-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <h1 style="color: rgb(0, 0, 0);">Welcome to hauller <%= name %> </h1>
+            <div class="secondary-actions">
+                <button class="btn btn-info btn-action" onclick="confirmDestroyAccount()">Destroy Account</button>
+                <button class="btn btn-info btn-action" onclick="window.location.href = 'uacc';">Update Account</button>
+                <button class="btn btn-danger btn-action" onclick="window.location.href = 'logout';">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="primary-actions">
+        <button class="btn btn-success primary-action-btn" onclick="window.location.href = 'uploadview';">
+            <i class="fas fa-plus-circle"></i> Create Ad
+        </button>
+        <button class="btn btn-warning primary-action-btn" onclick="confirmDestroyAds()">
+            <i class="fas fa-trash-alt"></i> Destroy Ads
+        </button>
+    </div>
+
+    <div class="glass-card">
+        <div class="page-title">Choose your Ute</div>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <% if (data.length > 0) { 
+                data.forEach(function(item) { %>
+                    <div class="col">
+                        <div class="card h-100">
+                            <a href="/member/view/<%= item._id %>">
+                                <img src="<%= item.image %>" class="card-img-top" alt="Ute Image">
+                            </a>
+                            <div class="card-body">
+                                <h5 class="card-title"><%= item.name %></h5>
+                                <p class="card-text"><%= item.description %></p>
+                                <p><strong>Price:</strong> $<%= item.price %></p>
+                                <p><strong>Created:</strong>
+                                    <% var dObj = new Date(item.timestamp); 
+                                       var date = dObj.getDate()+"/"+(dObj.getMonth()+1)+"/"+dObj.getFullYear()+" "+ dObj.getHours()+":"+dObj.getMinutes()+":"+dObj.getSeconds(); %>
+                                    <%= date %>
+                                </p>
+                            </div>
+                            <% if (item.id == id) { %>
+                            <div class="card-footer d-flex justify-content-between flex-wrap">
+                                <a href="/member/delete/<%= item._id %>" class="btn btn-sm btn-danger mb-1" onclick="return confirmDeleteAd()">Delete</a>
+                                <a href="/member/updatedet/<%= item._id %>" class="btn btn-sm btn-warning mb-1">Update Details</a>
+                                <a href="/member/updateimg/<%= item._id %>" class="btn btn-sm btn-primary mb-1">Update Image</a>
+                            </div>
+                            <% } %>
+                        </div>
+                    </div>
+            <% }) } %>
+        </div>
+    </div>
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function confirmDestroyAccount() {
+            if (confirm("Are you sure you want to permanently delete your account? This action cannot be undone.")) {
+                window.location.href = 'dacc';
+            }
+        }
+
+        function confirmDestroyAds() {
+            if (confirm("Are you sure you want to delete all your ads? This action cannot be undone.")) {
+                window.location.href = 'dadd';
+            }
+        }
+
+        function confirmDeleteAd() {
+            return confirm("Are you sure you want to delete this ad?");
+        }
+    </script>
+</body>
 </html>
+<script lang="javascript">
+    
+var oRows = document.getElementById('table').getElementsByTagName('tr');
+var iRowCount = oRows.length;
+
+
+
+</script>

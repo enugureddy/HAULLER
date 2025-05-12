@@ -24,7 +24,7 @@ var dbController = {
                 return
             }
             db = database.db("hauller")
-            console.log("DB Connected from Student")
+            console.log("DB Connected from Guest")
         })
     },
     viewmemberadds : function(res){
