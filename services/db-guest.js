@@ -1,6 +1,6 @@
 const mongodb = require('mongodb')
 const mongoClient = require('mongodb').MongoClient
-var url = "mongodb://localhost:27017"
+var url = process.env.MONGO_URI
 var db;
 
 

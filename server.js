@@ -1,6 +1,8 @@
 const express=require('express')
 const session=require('express-session')
 var app=express()
+app.use(express.static('styling'));
+
 
 const formidable = require('formidable')
 const fs = require('fs')
