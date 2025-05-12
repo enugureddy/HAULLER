@@ -23,8 +23,8 @@ var dbController = {
                 console.log("Err in database server connection")
                 return
             }
-            db = database.db("faster")
-            console.log("DB Connected from Student")
+            db = database.db("hauller")
+            console.log("DB Connected from Guest")
         })
     },
     viewmemberadds : function(res){

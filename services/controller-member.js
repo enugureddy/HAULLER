@@ -22,7 +22,7 @@ var controller ={
         {   
             currentloginuser=data._id.toString()
            // res.render("member-viewadds", {title : "Member Home Page", data : data})
-
+console.log("currentloginuser:",currentloginuser)
             res.redirect("/member/viewadds")
         }
         else
@@ -67,6 +67,7 @@ var controller ={
     },
     viewadds : function(req,res){
         var id= currentloginuser
+         
         dbController.dbController.viewAdds(id,res)
     },
    

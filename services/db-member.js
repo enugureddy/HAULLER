@@ -209,17 +209,44 @@ var dbController = {
             console.log("Added")
         })
     },
-    viewAdds : function(id,res){
-        var collection = db.collection("add")
-      
-        collection.find().toArray(function(err,result){
-            if(err){
-                console.log("Err in view")
-                return
+    viewAdds: function(id, res) {
+        var collection = db.collection("add");
+    
+        collection.find().toArray(function(err, result) {
+            if (err) {
+                console.log("Err in view");
+                return;
             }
-            res.render("member-viewadds", {title: "view page", data : result})
-        })
+    
+            var memberCollection = db.collection("member");
+            var filter = {
+                '_id': mongodb.ObjectId(id)
+            };
+    
+            memberCollection.findOne(filter, function(err, user) {
+                if (err || !user) {
+                    console.log("Error fetching user or user not found");
+                    return res.render("member-viewadds", { 
+                        title: "view page", 
+                        data: result, 
+                        id: id, 
+                        name: "Unknown User"
+                    });
+                }
+    
+                console.log("User:", user);
+                console.log("Current login user ID:", id);
+    
+                res.render("member-viewadds", { 
+                    title: "view page", 
+                    data: result, 
+                    id: id, 
+                    name: user.name 
+                });
+            });
+        });
     },
+    
     deleteadd : function(id,res){
         var collection = db.collection("add")
         var filter = {
