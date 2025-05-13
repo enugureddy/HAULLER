@@ -97,7 +97,7 @@ function insertAd(req, form,id)
     })
 
 }
-async function insertNotification(req,id)
+async function insertNotification(req)
 {
     console.log("inside controller")
     //getting collection
@@ -111,7 +111,7 @@ async function insertNotification(req,id)
    
        
             var notiData = {
-userId: id, // assuming this is provided
+userId: req.body.userId, // assuming this is provided
   title: req.body.title || "New Notification",
   message: req.body.message || "You have a new notification.",
   isRead: false,
