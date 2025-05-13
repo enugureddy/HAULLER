@@ -111,7 +111,9 @@ console.log("currentloginuser:",currentloginuser)
         var id=currentloginuser
         console.log("inside controller function of notifiction",req.body,id)
        // var form = new formidable.IncomingForm();
-        dbController.insertNotification(req,id) 
+ feature/core
+        dbController.insertNotification(req) 
+
         var data = currlogin
         // req.session.loginuserId 
         // req.session.loginuserEmail 
