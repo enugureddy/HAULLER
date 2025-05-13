@@ -175,13 +175,9 @@
    
     <script>
         const socket = io();
-
   const initialNotificationCount = "<%= notificationCount %>";
   let notifCounter = initialNotificationCount; 
   document.getElementById("notif-count").innerText = notifCounter;
-
-let notifCounter = 0;
-
 // Register logged-in user (inject their user ID from server)
 const currentUserId = "<%= id %>";
 const username = "<%= name %>";
@@ -231,11 +227,9 @@ function contactOwner(adId, ownerId, itemname) {
 }
 
 socket.on('notify', (data) => {
-
 notifCounter++; 
 console.log("notif count",notifCounter)// Increase count
     document.getElementById("notif-count").innerText = notifCounter;
-
 
     const notifDiv = document.createElement('div');
 notifDiv.innerText = data.message;
