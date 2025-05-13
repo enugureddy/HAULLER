@@ -102,6 +102,14 @@
             <div class="secondary-actions">
                 <button class="btn btn-info btn-action" onclick="confirmDestroyAccount()">Destroy Account</button>
                 <button class="btn btn-info btn-action" onclick="window.location.href = 'uacc';">Update Account</button>
+                <div class="position-relative me-2">
+        <button class="btn btn-secondary btn-action" onclick="toggleNotificationPanel()">
+            Notifications
+            <span id="notif-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                <%= notificationCount %>
+            </span>
+        </button>
+    </div>
                 <button class="btn btn-danger btn-action" onclick="window.location.href = 'logout';">Logout</button>
             </div>
         </div>
@@ -163,13 +171,14 @@
    
     <script>
         const socket = io();
-
+let notifCounter = 0;
 // Register logged-in user (inject their user ID from server)
 const currentUserId = "<%= id %>";
 const username = "<%= name %>";
 socket.emit('register-user', currentUserId);
 
 function contactOwner(adId, ownerId, itemname) {
+
     socket.emit('contact-owner', {
         fromUser: currentUserId,
         toUser: ownerId,
@@ -177,16 +186,53 @@ function contactOwner(adId, ownerId, itemname) {
         itemname: itemname,
         username: username
     });
-    alert("Notification sent to the owner.");
+   // alert("Notification sent to the owner.");
+    fetch('/member/addnotification', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+       // include session/cookies
+        body: JSON.stringify({
+    fromUser: currentUserId,
+           
+      userId: ownerId,
+      title: 'New Contact Request',
+      message: `${username} has contacted you regarding "${itemname}".`,
+      adId: adId,
+    
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Failed to store notification");
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log("Notification stored:", data);
+        alert("Notification sent to the owner.");
+    })
+    .catch(err => {
+        console.error("Error storing notification:", err);
+    });
+
+    
 }
 
 socket.on('notify', (data) => {
+
     const notifDiv = document.createElement('div');
 notifDiv.innerText = data.message;
 notifDiv.className = 'alert alert-info position-fixed top-0 end-0 m-3';
 document.body.appendChild(notifDiv);
 setTimeout(() => notifDiv.remove(), 5000);
+
 });
+  function toggleNotificationPanel() {
+        alert(`You have ${notifCounter} new notification(s).`); // Or replace with a custom panel/modal
+        window.location.href = 'notification';
+    }
         function confirmDestroyAccount() {
             if (confirm("Are you sure you want to permanently delete your account? This action cannot be undone.")) {
                 window.location.href = 'dacc';
