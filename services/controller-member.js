@@ -23,7 +23,7 @@ var controller ={
         {    req.session.member = data
             currentloginuser=data._id.toString()
            // res.render("member-viewadds", {title : "Member Home Page", data : data})
-
+console.log("currentloginuser:",currentloginuser)
             res.redirect("/member/viewadds")
         }
         else
@@ -68,7 +68,12 @@ var controller ={
     },
     viewadds : function(req,res){
         var id= currentloginuser
+         
         dbController.dbController.viewAdds(id,res)
+    },
+    notification : function(req,res){
+        var id= currentloginuser
+        dbController.dbController.notification(id,res)
     },
    
     uploadView : function(req, res){
@@ -96,6 +101,17 @@ var controller ={
         console.log("inside controller function")
         var form = new formidable.IncomingForm();
         dbController.insertAd(req, form,id) 
+        var data = currlogin
+        // req.session.loginuserId 
+        // req.session.loginuserEmail 
+       // res.render("member-viewadds", {title: "user home page", data: data })
+    await res.redirect("/member/viewadds")
+    },
+        addnotification : async function(req, res){
+        var id=currentloginuser
+        console.log("inside controller function of notifiction",req.body,id)
+       // var form = new formidable.IncomingForm();
+        dbController.insertNotification(req,id) 
         var data = currlogin
         // req.session.loginuserId 
         // req.session.loginuserEmail 

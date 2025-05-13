@@ -1,4 +1,6 @@
 const controller = require("./controller-member")
+const express = require('express');
+const router = express.Router();
 const { isAdminLoggedIn } = require('../middleware/auth');
 module.exports=function(member){
    
@@ -9,6 +11,13 @@ module.exports=function(member){
     member.route('/member-forgotpassword').get(controller.forgotpassword)
     member.route('/sendpassword').post(controller.sendpassword)
     member.route("/viewadds").get(isAdminLoggedIn,controller.viewadds) 
+    member.route("/notification").get(isAdminLoggedIn,controller.notification)
+      member.route("/addnotification").post(isAdminLoggedIn,controller.addnotification)
+//        router.post('/addnotification',async (req, res) => {
+//   controller.addnotification(req,res)
+    
+
+
    // member.route('/uploadview').get(controller.uploadview)
    // member.route('/uploadaction').post(controller.uploadaction)
    member.route("/uploadview").get(isAdminLoggedIn,controller.uploadView)

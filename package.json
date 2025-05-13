@@ -1,7 +1,7 @@
 {
-  "name": "HAULLER",
+  "name": "hauller",
   "version": "1.0.0",
-  "description": "simple ebay app",
+  "description": "ute hauling services",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,17 +9,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/enugureddy/Final-project.git"
+    "url": "https://github.com/Thirus224849242/HAULLER.git"
   },
   "author": "reddy",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/enugureddy/Final-project/issues"
+    "url": "https://github.com/Thirus224849242/HAULLER.git/issues"
   },
-  "homepage": "https://github.com/enugureddy/Final-project#readme",
+  "homepage": "https://github.com/Thirus224849242/HAULLER.git#readme",
   "dependencies": {
     "@sendgrid/mail": "^8.1.5",
     "body-parser": "^1.19.1",
+    "cloudinary": "^2.6.1",
     "dotenv": "^16.5.0",
     "ejs": "^3.1.6",
     "express": "^4.17.2",
@@ -27,6 +28,7 @@
     "formidable": "^2.0.1",
     "fs": "^0.0.1-security",
     "mongodb": "^4.3.1",
-    "node-datetime": "^2.1.2"
+    "node-datetime": "^2.1.2",
+    "socket.io": "^4.8.1"
   }
 }
