@@ -321,8 +321,9 @@ addCollection.find().toArray(function(err, ads) {
             if (err) {
                 console.error("Error counting notifications:", err);
                 count = 0;
+             
             }
-
+   console.log("notification count:", count);
             // Step 4: Render page with all data
             return res.render("member-viewadds", {
                 title: "View Page",
