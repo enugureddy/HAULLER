@@ -3,6 +3,7 @@ const mongoClient = require('mongodb').MongoClient
 const fs=require('fs')
 //const cloudinary = require('cloudinary').v2
 const cloudinary = require('../config/cloudinary')
+const { notification } = require('./controller-member')
 var url = process.env.MONGO_URI
 var db;
 
@@ -96,6 +97,69 @@ function insertAd(req, form,id)
     })
 
 }
+async function insertNotification(req,id)
+{
+    console.log("inside controller")
+    //getting collection
+    var collection = db.collection("member_notifications")
+
+    
+        //collecting information about the file upload
+      
+
+        //adding text to db
+   
+       
+            var notiData = {
+userId: id, // assuming this is provided
+  title: req.body.title || "New Notification",
+  message: req.body.message || "You have a new notification.",
+  isRead: false,
+  createdAt: new Date(),
+    adId:req.body.adId // manual
+            }
+            
+            const result = await collection.insertOne(notiData);
+    return result;
+          }
+
+        //insert to db
+    
+         //new id generated //_id.exten ::: for eg: 123123123123.png
+        //u want to show a full details of ad
+        //ip: ad._id
+        //u can get the advertise detail from db using ad id
+        //retrieved ad, u can get ad.image (extension)
+        //_id.extension
+
+        // var newFileNameName = "./public/media/" + adId + "." + extension;
+
+        // //read
+        // fs.readFile(oldPath, function(err, data){
+        //     if(err)
+        //     {
+        //         console.log("Error in upload : ", err)
+        //         return
+        //     }
+        //     //write
+        //     fs.writeFile(newFileNameName, data, function(err){
+        //         if(err)
+        //         {
+        //             console.log("Error in upload2 : ", err)
+        //             return   
+        //         }
+        //     })
+        // })
+
+        /*
+        if( extension === 'png' || extension === 'jpg' )
+        {
+            var newFileName = __dirname + "/media/" + files.adimage.originalFilename;
+        }
+        */
+    
+
+
 // function insertimg(req, form,cid)
 // {
 //     console.log("inside controller img")
@@ -220,9 +284,62 @@ var dbController = {
         })
     },
     viewAdds: function(id, res) {
-        var collection = db.collection("add");
-    
-        collection.find().toArray(function(err, result) {
+       const addCollection = db.collection("add");
+const notificationCollection = db.collection("member_notifications");
+const memberCollection = db.collection("member");
+
+const userIdObject = { '_id': mongodb.ObjectId(id) };
+const notificationFilter = { 'userId': id };
+
+// Step 1: Fetch all ads
+addCollection.find().toArray(function(err, ads) {
+    if (err) {
+        console.error("Error fetching ads:", err);
+        return res.status(500).send("Error fetching ads");
+    }
+
+    // Step 2: Fetch user details
+    memberCollection.findOne(userIdObject, function(err, user) {
+        if (err || !user) {
+            console.error("Error fetching user:", err);
+            return res.render("member-viewadds", {
+                title: "View Page",
+                data: ads,
+                id: id,
+                name: "Unknown User",
+                notificationCount: 0
+            });
+        }
+
+        // Step 3: Count notifications
+        notificationCollection.countDocuments(notificationFilter, function(err, count) {
+            if (err) {
+                console.error("Error counting notifications:", err);
+                count = 0;
+            }
+
+            // Step 4: Render page with all data
+            return res.render("member-viewadds", {
+                title: "View Page",
+                data: ads,
+                id: id,
+                name: user.name,
+                notificationCount: count
+            });
+        });
+    });
+});
+
+        
+    },
+        notification: function(id, res) {
+        var collection = db.collection("member_notifications");
+        
+            var filter1={
+            "userId":id
+        }
+     
+        collection.find(filter1).toArray(function(err, result) {
             if (err) {
                 console.log("Err in view");
                 return;
@@ -232,7 +349,7 @@ var dbController = {
             var filter = {
                 '_id': mongodb.ObjectId(id)
             };
-    
+   
             memberCollection.findOne(filter, function(err, user) {
                 if (err || !user) {
                     console.log("Error fetching user or user not found");
@@ -244,19 +361,26 @@ var dbController = {
                     });
                 }
     
-                console.log("User:", user);
+                console.log("User:",result);
                 console.log("Current login user ID:", id);
-    
-                res.render("member-viewadds", { 
-                    title: "view page", 
-                    data: result, 
-                    id: id, 
-                    name: user.name 
-                });
+            const formatted = result.map(n => ({
+      title: n.title,
+      message: n.message,
+      timeAgo: getTimeAgo(n.createdAt),
+      adId: n.adId,
+    }));
+    console.log("Formatted notifications:", formatted);
+function getTimeAgo(date) {
+  const diff = (Date.now() - new Date(date)) / 1000;
+  if (diff < 60) return 'just now';
+  if (diff < 3600) return Math.floor(diff / 60) + ' minutes ago';
+  if (diff < 86400) return Math.floor(diff / 3600) + ' hours ago';
+  return Math.floor(diff / 86400) + ' days ago';
+}
+    res.render('member-viewnotifications', { data: formatted, id: id});
             });
         });
     },
-    
     deleteadd : function(id,res){
         var collection = db.collection("add")
         var filter = {
@@ -437,4 +561,4 @@ var dbController = {
 
 }
 
-    module.exports = {dbController,loginmember,insertAd,getbyid,insertimg}
+    module.exports = {dbController,loginmember,insertAd,getbyid,insertimg,insertNotification}

@@ -16,7 +16,7 @@ var member=express()
 
 var admin=express()
 var guest=express()
-
+app.use(express.json());
 app.use(bodyParser.urlencoded({
     extended:true
 }))
