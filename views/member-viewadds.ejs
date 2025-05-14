@@ -113,6 +113,8 @@
 
             </span>
         </button>
+        <audio id="notifSound" src="/media/notification.mp3" preload="auto" type="audio/mpeg"></audio>
+
     </div>
                 <button class="btn btn-danger btn-action" onclick="window.location.href = 'logout';">Logout</button>
             </div>
@@ -181,6 +183,7 @@
 // Register logged-in user (inject their user ID from server)
 const currentUserId = "<%= id %>";
 const username = "<%= name %>";
+   
 socket.emit('register-user', currentUserId);
 
 function contactOwner(adId, ownerId, itemname) {
@@ -232,12 +235,19 @@ console.log("notif count",notifCounter)// Increase count
     document.getElementById("notif-count").innerText = notifCounter;
 
     const notifDiv = document.createElement('div');
-notifDiv.innerText = data.message;
+notifDiv.innerText =  `🔔${data.message}`;
 notifDiv.className = 'alert alert-info position-fixed top-0 end-0 m-3';
 document.body.appendChild(notifDiv);
 setTimeout(() => notifDiv.remove(), 5000);
+ const notifSound = document.getElementById('notifSound');
+  if (notifSound) {
+  notifSound.play().catch(e => console.log("Auto-play blocked:", e));
 
-});
+        setTimeout(() => notifDiv.remove(), 5000);
+        
+   
+
+}});
   function toggleNotificationPanel() {
         alert(`You have ${notifCounter} new notification(s).`); // Or replace with a custom panel/modal
         window.location.href = 'notification';

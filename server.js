@@ -79,7 +79,7 @@ io.on('connection', (socket) => {
         const targetSocket = userSockets[toUser];
         if (targetSocket) {
             io.to(targetSocket).emit('notify', {
-                message: `User ${username} with user id ${fromUser} is interested in your ad #${itemname} with id ${adId}`,
+                message: ` You have a notification from  ${username}`,
             });
         }
     });
