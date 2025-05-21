@@ -156,9 +156,17 @@ console.log("currentloginuser:",req.session.member._id.toString())
         var id = req.params.id
         dbController.dbController.deleteadd(id,res)
     },
+     deletenot :function(req,res,id){
+        var id = req.params.id
+        dbController.dbController.deletenot(id,res)
+    },
     dadd :function(req,res,id){
         var id = req.session.member._id.toString()
         dbController.dbController.dadd(id,res)
+    },
+     dnot :function(req,res,id){
+        var id = req.session.member._id.toString()
+        dbController.dbController.dnot(id,res)
     },
     dacc :function(req,res,id){
         var id = req.session.member._id.toString()
@@ -196,6 +204,14 @@ var id=req.params.id
      res.render("member-viewadds")
  }
 },
+
+    chat: function(req,res){
+        // var id=req.query.otherId;
+        // console.log("id:",id)
+        dbController.dbController.retrieveusers(req.session.member._id,res)
+       
+},
+
 
 
 

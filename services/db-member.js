@@ -3,7 +3,7 @@ const mongoClient = require('mongodb').MongoClient
 const fs=require('fs')
 //const cloudinary = require('cloudinary').v2
 const cloudinary = require('../config/cloudinary')
-const { notification } = require('./controller-member')
+const { notification, dnot } = require('./controller-member')
 var url = process.env.MONGO_URI
 var db;
 
@@ -370,6 +370,7 @@ addCollection.find().toArray(function(err, ads) {
                 console.log("User:",result);
                 console.log("Current login user ID:", id);
             const formatted = result.map(n => ({
+                _id: n._id,
       title: n.title,
       message: n.message,
       timeAgo: getTimeAgo(n.createdAt),
@@ -400,6 +401,19 @@ function getTimeAgo(date) {
         res.redirect("/member/viewadds")
        // res.render("staff-viewusers", {title: "view page"})
     },
+     deletenot : function(id,res){
+        var collection = db.collection("member_notifications")
+        var filter = {
+            "_id" : mongodb.ObjectId(id)
+        }
+        collection.deleteOne(filter,function(err,data){
+            if(err){
+                console.log("Err while deleting add")
+            }
+        })
+        res.redirect("/member/notification")
+       // res.render("staff-viewusers", {title: "view page"})
+    },
     dadd : function(id,res){
         var collection = db.collection("add")
         var filter = {
@@ -411,6 +425,19 @@ function getTimeAgo(date) {
             }
         })
         res.redirect("/member/viewadds")
+       // res.render("staff-viewusers", {title: "view page"})
+    },
+     dnot : function(id,res){
+        var collection = db.collection("member_notifications")
+        var filter = {
+            "userId" : id
+        }
+        collection.deleteMany(filter,function(err,data){
+            if(err){
+                console.log("Err while deleting notification")
+            }
+        })
+        res.redirect("/member/notification")
        // res.render("staff-viewusers", {title: "view page"})
     },
     dacc : function(id,res){
@@ -509,7 +536,35 @@ function getTimeAgo(date) {
             
         })
     },
+    
+    retrieveusers: function(id, res) {
+    const collection = db.collection("member");
 
+    collection.findOne({ _id: mongodb.ObjectId(id) }, function(err, currentUser) {
+        if (err) {
+            console.error("Error finding current user:", err);
+            res.status(500).send("Internal Server Error");
+            return;
+        }
+
+        collection.find({
+            _id: { $ne: mongodb.ObjectId(id) } // Exclude current user
+        }, {
+            projection: { password: 0 }
+        }).toArray(function(err, otherUsers) {
+            if (err) {
+                console.log("Error retrieving other users");
+                return;
+            }
+            console.log("Current user:", currentUser);
+          
+
+   console.log("Other users:", otherUsers);
+            res.render("chat", { currentUser, otherUsers });
+        });
+    });
+}
+,
     uacc: function(id,res){
         var collection = db.collection("member")
          

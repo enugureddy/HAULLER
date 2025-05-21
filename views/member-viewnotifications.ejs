@@ -112,16 +112,19 @@
       <% if (data.length > 0) { %>
         <% data.forEach(function(n) { %>
             <a href="/member/view/<%= n.adId %>">
-          <li data-id="<%= n._id %>">
-            <div class="notification-content">
-              <strong><%= n.title %></strong> - <%= n.message %>
-              <em>(<%= n.timeAgo %>)</em>
-            </div>
-            <div class="notification-actions">
-              <button class="btn btn-sm btn-outline-danger" onclick="deleteNotification('<%= n._id %>')">Delete</button>
-            </div>
-            </a>
-          </li>
+        <li data-id="<%= n._id %>">
+  <div class="notification-content">
+    <a href="/member/view/<%= n.adId %>" style="text-decoration: none; color: inherit;">
+      <strong><%= n.title %></strong> - <%= n.message %>
+      <em>(<%= n.timeAgo %>)</em>
+    </a>
+  </div>
+  <div class="notification-actions">
+    <a href="/member/deletenot/<%= n._id %>" class="btn btn-sm btn-danger mb-1"><%= n._id %></a>
+  </div>
+</li>
+
+           
         <% }) %>
       <% } else { %>
         <li>No notifications yet.</li>
@@ -155,26 +158,17 @@
     });
 
     function markAllRead() {
-      fetch('/member/notifications/markAllRead', {
-        method: 'POST'
-      }).then(res => {
-        if (res.ok) {
+     if (confirm("Are you sure you want to delete all your ads? This action cannot be undone.")) {
+                window.location.href = 'dnot';
+            }
+     
           document.getElementById('notificationList').innerHTML = '<li>All notifications marked as read.</li>';
-          updateCounter(-1, true);
-        }
-      });
+         
+      
     }
 
     function deleteNotification(id) {
-      fetch(`/member/notifications/delete/${id}`, {
-        method: 'DELETE'
-      }).then(res => {
-        if (res.ok) {
-          const li = document.querySelector(`li[data-id="${id}"]`);
-          if (li) li.remove();
-          updateCounter(-1);
-        }
-      });
+    
     }
 
     function updateCounter(change, reset = false) {
@@ -182,6 +176,7 @@
       let total = parseInt(counter.textContent.replace(/\D/g, '')) || 0;
       counter.textContent = reset ? 'Total: 0' : `Total: ${total + change}`;
     }
+     
   </script>
 
 </body>
