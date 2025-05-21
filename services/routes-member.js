@@ -16,7 +16,14 @@ module.exports=function(member){
 //        router.post('/addnotification',async (req, res) => {
 //   controller.addnotification(req,res)
     
+// member.route("/chat/:id", (req, res) => {
+//   // For testing: manually simulate different users by query string
+//   const myId = req.session.member._id.toString() || 'user1';
+//   const otherId =  req.params.id || 'user2';
 
+//   res.render("chat", { myId:myId, otherId:otherId });
+// });
+member.route("/chat").get(isAdminLoggedIn,controller.chat)
 
    // member.route('/uploadview').get(controller.uploadview)
    // member.route('/uploadaction').post(controller.uploadaction)
@@ -26,7 +33,7 @@ module.exports=function(member){
    member.route("/uploadaction").post(isAdminLoggedIn,controller.uploadAction)
 
    member.route("/delete/:id").get(isAdminLoggedIn,controller.delete)
-
+member.route("/deletenot/:id").get(isAdminLoggedIn,controller.deletenot)
 
    member.route("/updatedet/:id").get(isAdminLoggedIn,controller.updatedet)
 
@@ -37,6 +44,7 @@ module.exports=function(member){
    member.route("/updatedetpost").post(isAdminLoggedIn,controller.updatedetpost)
    
    member.route("/dadd").get(isAdminLoggedIn,controller.dadd)
+   member.route("/dnot").get(isAdminLoggedIn,controller.dnot)
    member.route("/dacc").get(isAdminLoggedIn,controller.dacc)
    member.route("/uacc").get(isAdminLoggedIn,controller.uacc)
    member.route("/uacc").post(isAdminLoggedIn,controller.uaccpost)

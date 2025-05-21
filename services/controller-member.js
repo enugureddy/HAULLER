@@ -5,7 +5,7 @@ const fs = require('fs')
 
 dbController.dbController.connection()
 var currlogin
-let currentloginuser
+
 
 var controller ={
     login : function(req,res){
@@ -21,9 +21,9 @@ var controller ={
       
         if (data != null)
         {    req.session.member = data
-            currentloginuser=data._id.toString()
+           
            // res.render("member-viewadds", {title : "Member Home Page", data : data})
-console.log("currentloginuser:",currentloginuser)
+console.log("currentloginuser:",req.session.member._id.toString())
             res.redirect("/member/viewadds")
         }
         else
@@ -67,12 +67,12 @@ console.log("currentloginuser:",currentloginuser)
         }
     },
     viewadds : function(req,res){
-        var id= currentloginuser
+        var id= req.session.member._id.toString()
          
         dbController.dbController.viewAdds(id,res)
     },
     notification : function(req,res){
-        var id= currentloginuser
+        var id= req.session.member._id.toString()
         dbController.dbController.notification(id,res)
     },
    
@@ -97,7 +97,7 @@ console.log("currentloginuser:",currentloginuser)
         // }
      },
     uploadAction : async function(req, res){
-        var id=currentloginuser
+        var id=req.session.member._id.toString()
         console.log("inside controller function")
         var form = new formidable.IncomingForm();
         dbController.insertAd(req, form,id) 
@@ -108,10 +108,12 @@ console.log("currentloginuser:",currentloginuser)
     await res.redirect("/member/viewadds")
     },
         addnotification : async function(req, res){
-        var id=currentloginuser
+        var id=req.session.member._id.toString()
         console.log("inside controller function of notifiction",req.body,id)
        // var form = new formidable.IncomingForm();
-        dbController.insertNotification(req,id) 
+ 
+        dbController.insertNotification(req) 
+
         var data = currlogin
         // req.session.loginuserId 
         // req.session.loginuserEmail 
@@ -154,16 +156,24 @@ console.log("currentloginuser:",currentloginuser)
         var id = req.params.id
         dbController.dbController.deleteadd(id,res)
     },
+     deletenot :function(req,res,id){
+        var id = req.params.id
+        dbController.dbController.deletenot(id,res)
+    },
     dadd :function(req,res,id){
-        var id = currentloginuser
+        var id = req.session.member._id.toString()
         dbController.dbController.dadd(id,res)
     },
+     dnot :function(req,res,id){
+        var id = req.session.member._id.toString()
+        dbController.dbController.dnot(id,res)
+    },
     dacc :function(req,res,id){
-        var id = currentloginuser
+        var id = req.session.member._id.toString()
         dbController.dbController.dacc(id,res)
     },
     uacc : function(req,res){
-        var id = currentloginuser
+        var id = req.session.member._id.toString()
         dbController.dbController.uacc(id,res)
     },
     uaccpost : function(req,res){
@@ -194,6 +204,14 @@ var id=req.params.id
      res.render("member-viewadds")
  }
 },
+
+    chat: function(req,res){
+        // var id=req.query.otherId;
+        // console.log("id:",id)
+        dbController.dbController.retrieveusers(req.session.member._id,res)
+       
+},
+
 
 
 
