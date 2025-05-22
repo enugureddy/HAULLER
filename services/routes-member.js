@@ -16,6 +16,12 @@ module.exports=function(member){
 //        router.post('/addnotification',async (req, res) => {
 //   controller.addnotification(req,res)
     
+member.get('/api/student', (req, res) => {
+  res.json({
+    name: "Enugu Thirumal Reddy",
+    studentId: "s224849242"
+  });
+});
 
 
    // member.route('/uploadview').get(controller.uploadview)
