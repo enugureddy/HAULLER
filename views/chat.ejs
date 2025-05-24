@@ -100,11 +100,23 @@
       padding: 1rem;
     }
 
-    header.chat-title {
+    .chat-title {
       font-size: 1.2rem;
       font-weight: bold;
       margin-bottom: 1rem;
       color: var(--porter-blue);
+    }
+
+    #chatWith {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    #typingIndicator {
+      font-size: 0.85rem;
+      color: #888;
+      margin-bottom: 0.5rem;
+      display: none;
     }
 
     #chatBox {
@@ -174,12 +186,8 @@
     }
 
     @media (max-width: 768px) {
-      .user-list {
-        display: none;
-      }
-      .chat-wrapper {
-        flex-direction: column;
-      }
+      .user-list { display: none; }
+      .chat-wrapper { flex-direction: column; }
     }
   </style>
 </head>
@@ -213,8 +221,10 @@
 
     <!-- Chat Container -->
     <div class="chat-container">
-      <header class="chat-title"><%= currentUser.name %></header>
-      <div id="chatWith"><%= otherUsers.length > 0 ? otherUsers[0].name : 'No one to chat with' %></div>
+      <div id="chatWith">
+        <%= otherUsers.length > 0 ? 'Chatting with ' + otherUsers[0].name : 'No one to chat with' %>
+        <div id="typingIndicator"></div>
+      </div>
       <div id="chatBox"></div>
       <div class="input-container">
         <input id="msgInput" type="text" placeholder="Type a message..." />
@@ -228,7 +238,7 @@
     &copy; <%= new Date().getFullYear() %> Hauller Chat. Built by Team 40 | SIT725
   </footer>
 
-  <!-- Chat JS -->
+  <!-- JS -->
   <script>
     const socket = io();
     const currentUserId = "<%= currentUser._id.toString() %>";
@@ -246,9 +256,8 @@
       button.classList.add('active');
       currentChatUserId = button.dataset.id;
       currentChatname = button.dataset.name;
-      document.getElementById('chatWith').innerText = 'Chatting with ' + currentChatname;
-      const chatBox = document.getElementById('chatBox');
-      chatBox.innerHTML = '';
+      document.getElementById('chatWith').innerHTML = 'Chatting with ' + currentChatname + '<div id="typingIndicator"></div>';
+      document.getElementById('chatBox').innerHTML = '';
       socket.emit('joinRoom', { senderId: currentUserId, receiverId: currentChatUserId });
       if (messages[currentChatUserId]) {
         messages[currentChatUserId].forEach(msg => appendMessage(msg.senderId, msg.message));
@@ -273,12 +282,42 @@
       messages[currentChatUserId].push({ senderId: currentUserId, message });
       appendMessage(currentUserId, message);
       input.value = '';
+      socket.emit('stopTyping', { senderId: currentUserId, receiverId: currentChatUserId });
     }
+
+    const typingIndicator = document.getElementById('typingIndicator');
+    let typingTimeout;
+    const msgInput = document.getElementById('msgInput');
+
+    msgInput.addEventListener('input', () => {
+      if (!currentChatUserId) return;
+      socket.emit('typing', { senderId: currentUserId, receiverId: currentChatUserId, senderName: currentUserName });
+      clearTimeout(typingTimeout);
+      typingTimeout = setTimeout(() => {
+        socket.emit('stopTyping', { senderId: currentUserId, receiverId: currentChatUserId });
+      }, 1000);
+    });
 
     socket.on('newMessage', ({ senderId, message }) => {
       if (!messages[senderId]) messages[senderId] = [];
       messages[senderId].push({ senderId, message });
       if (senderId === currentChatUserId) appendMessage(senderId, message);
+    });
+
+    socket.on('displayTyping', ({ senderId, senderName }) => {
+      if (senderId === currentChatUserId) {
+        const indicator = document.getElementById('typingIndicator');
+        indicator.style.display = 'block';
+        indicator.textContent = `${senderName} is typing...`;
+      }
+    });
+
+    socket.on('hideTyping', ({ senderId }) => {
+      if (senderId === currentChatUserId) {
+        const indicator = document.getElementById('typingIndicator');
+        indicator.style.display = 'none';
+        indicator.textContent = '';
+      }
     });
   </script>
 </body>
