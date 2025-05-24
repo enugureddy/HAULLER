@@ -49,7 +49,7 @@ member.route("/deletenot/:id").get(isAdminLoggedIn,controller.deletenot)
    member.route("/uacc").get(isAdminLoggedIn,controller.uacc)
    member.route("/uacc").post(isAdminLoggedIn,controller.uaccpost)
    member.route("/view/:id").get(isAdminLoggedIn,controller.view)
-  
+   member.route('/search').get(controller.search)
     member.route('/logout').get(controller.logout)
 
 }

@@ -1,313 +1,245 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Listings</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Open+Sans&display=swap" rel="stylesheet">
-    
-    <style>
-        body {
-            background: lightblue no-repeat center center fixed;
-            background-size: cover;
-            min-height: 100vh;
-            font-family: 'Open Sans', sans-serif;
-            padding: 20px;
-            color: white;
-        }
-
-        .glass-card {
-            background-color: white;
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            padding: 20px;
-            margin-bottom: 20px;
-            color: rgb(0, 0, 0);
-          
-        }
-
-        .navbar {
-            padding: 15px;
-            border-radius: 15px;
-            margin-bottom: 15px;
-        }
-
-        h1 {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 700;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            margin-bottom: 0;
-        }
-
-        .primary-actions {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin: 30px 0;
-        }
-
-        .primary-action-btn {
-            font-weight: bold;
-            padding: 15px 30px;
-            font-size: 1.2rem;
-            transition: all 0.3s ease;
-            min-width: 220px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-
-        .primary-action-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
-        }
-
-        .secondary-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .btn-action {
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        .btn-action:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-
-        .page-title {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        .card img {
-            height: 200px;
-            object-fit: cover;
-        }
-    </style>
-</head>
-
-<body>
-    <nav class="navbar glass-card">
-        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-            <h1 style="color: rgb(0, 0, 0);">Welcome to hauller <%= name %> </h1>
-            <div class="secondary-actions">
-                
-                <div class="position-relative me-2">
-  <button class="btn btn-action" onclick="toggleSettingsDropdown()" style="background: none; border: none;">
-    <i class="fas fa-cog fa-2x text-dark"></i>
-  </button>
-
-  <div id="settings-dropdown" class="card shadow-lg p-3 bg-white text-dark position-absolute end-0 mt-2" style="min-width: 200px; display: none; z-index: 1050;">
- <div class="d-flex flex-column align-items-start gap-2 p-3 rounded shadow-sm bg-light" style="width: 220px;">
-  <button class="btn btn-outline-primary w-100 d-flex align-items-center gap-2" onclick="window.location.href = 'uacc';">
-    <i class="fas fa-user-edit"></i> Update Account
-  </button>
-
-  <button class="btn btn-outline-danger w-100 d-flex align-items-center gap-2" onclick="confirmDestroyAccount()">
-    <i class="fas fa-user-times"></i> Destroy Account
-  </button>
-
-  <button class="btn btn-danger w-100 d-flex align-items-center gap-2" onclick="window.location.href = 'logout';">
-    <i class="fas fa-sign-out-alt"></i> Logout
-  </button>
-</div>
-
-  </div>
-</div>
-
-               <div class="position-relative me-2">
-  <button class="btn btn-action" onclick="toggleNotificationPanel()" style="position: relative; background: none; border: none;">
-    <i class="fas fa-bell fa-2x text-dark"></i>
-    <span id="notif-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-      <%= notificationCount %>
-    </span>
-  </button>
-  <audio id="notifSound" src="/media/notification.mp3" preload="auto" type="audio/mpeg"></audio>
-</div>
-                
-            </div>
-        </div>
-    </nav>
-
-    <div class="primary-actions">
-        <button class="btn btn-success primary-action-btn" onclick="window.location.href = 'uploadview';">
-            <i class="fas fa-plus-circle"></i> Create Ad
-        </button>
-        <button class="btn btn-warning primary-action-btn" onclick="confirmDestroyAds()">
-            <i class="fas fa-trash-alt"></i> Destroy Ads
-        </button>
-    </div>
-
-    <div class="glass-card">
-        <div class="page-title">Choose your Ute</div>
-        <div class="row row-cols-1 row-cols-md-3 g-4">
-            <% if (data.length > 0) { 
-                data.forEach(function(item) { %>
-                    <div class="col">
-                        <div class="card h-100">
-                            <a href="/member/view/<%= item._id %>">
-                                <img src="<%= item.image %>" class="card-img-top" alt="Ute Image">
-                            </a>
-                            <div class="card-body">
-                                <h5 class="card-title"><%= item.name %></h5>
-                                <p class="card-text"><%= item.description %></p>
-                                <p><strong>Price:</strong> $<%= item.price %></p>
-                                <p><strong>Created:</strong>
-                                    <% var dObj = new Date(item.timestamp); 
-                                       var date = dObj.getDate()+"/"+(dObj.getMonth()+1)+"/"+dObj.getFullYear()+" "+ dObj.getHours()+":"+dObj.getMinutes()+":"+dObj.getSeconds(); %>
-                                    <%= date %>
-                                </p>
-                            </div>
-                            <% if (item.id == id) { %>
-                            <div class="card-footer d-flex justify-content-between flex-wrap">
-                                <a href="/member/delete/<%= item._id %>" class="btn btn-sm btn-danger mb-1" onclick="return confirmDeleteAd()">Delete</a>
-                                <a href="/member/updatedet/<%= item._id %>" class="btn btn-sm btn-warning mb-1">Update Details</a>
-                                <a href="/member/updateimg/<%= item._id %>" class="btn btn-sm btn-primary mb-1">Update Image</a>
-                                    
-                            </div>
-                            <% } else { %>
-                                <div class="card-footer">
-                                    <button class="btn btn-sm btn-success" onclick="contactOwner( '<%= item._id %>', '<%= item.id %>','<%= item.name %>')">
-                                        Contact Owner
-                                    </button>
-                                  
-                                    <a href="/member/chat">chat</a>
-
-                                </div>
-                            <% } %>
-                        </div>
-                    </div>
-            <% }) } %>
-        </div>
-    </div>
-
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <!-- Bootstrap JS Bundle -->
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-   
-    <script>
-        const socket = io();
-  const initialNotificationCount = "<%= notificationCount %>";
-  let notifCounter = initialNotificationCount; 
-  document.getElementById("notif-count").innerText = notifCounter;
-// Register logged-in user (inject their user ID from server)
-const currentUserId = "<%= id %>";
-const username = "<%= name %>";
-   
-socket.emit('register-user', currentUserId);
-
-function contactOwner(adId, ownerId, itemname) {
-
-    socket.emit('contact-owner', {
-        fromUser: currentUserId,
-        toUser: ownerId,
-        adId: adId,
-        itemname: itemname,
-        username: username
-    });
-   // alert("Notification sent to the owner.");
-    fetch('/member/addnotification', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-       // include session/cookies
-        body: JSON.stringify({
-    fromUser: currentUserId,
-           
-      userId: ownerId,
-      title: 'New Contact Request',
-      message: `${username} has contacted you regarding "${itemname}".`,
-      adId: adId,
-    
-        })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("Failed to store notification");
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log("Notification stored:", data);
-        alert("Notification sent to the owner.");
-    })
-    .catch(err => {
-        console.error("Error storing notification:", err);
-    });
-
-    // Redirect to chat page
-  
-    
-}
-
-socket.on('notify', (data) => {
-notifCounter++; 
-console.log("notif count",notifCounter)// Increase count
-    document.getElementById("notif-count").innerText = notifCounter;
-
-    const notifDiv = document.createElement('div');
-notifDiv.innerText = `🔔 ${data.message}`;
-notifDiv.className = 'alert alert-info position-fixed top-0 end-0 m-3';
-notifDiv.style.zIndex = '2000';
-notifDiv.style.minWidth = '250px';
-notifDiv.style.transition = 'opacity 0.5s ease';
-document.body.appendChild(notifDiv);
-setTimeout(() => notifDiv.remove(), 5000);
- const notifSound = document.getElementById('notifSound');
-  if (notifSound) {
-  notifSound.play().catch(e => console.log("Auto-play blocked:", e));
-
-        setTimeout(() => notifDiv.remove(), 5000);
-        
-   
-
-}});
-function toggleSettingsDropdown() {
-  const dropdown = document.getElementById("settings-dropdown");
-  dropdown.style.display = (dropdown.style.display === "none" || dropdown.style.display === "") ? "block" : "none";
-}
-  function toggleNotificationPanel() {
-        alert(`You have ${notifCounter} new notification(s).`); // Or replace with a custom panel/modal
-        window.location.href = 'notification';
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Listings</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+   * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
-        function confirmDestroyAccount() {
-            if (confirm("Are you sure you want to permanently delete your account? This action cannot be undone.")) {
-                window.location.href = 'dacc';
-            }
-        }
+    body {
+      background: #f4f6f8;
+      font-family: 'Montserrat', sans-serif;
+      color: #2c3e50;
+      padding: 20px;
+    }
+    .navbar {
+      background: #007bff;
+      border-radius: 8px;
+      padding: 16px 24px;
+      margin-bottom: 24px;
+      color: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      position: relative;
+    }
+    .navbar h1 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+    .search-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .search-container input {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 16px;
+      flex: 1;
+    }
+    .search-container button img {
+      width: 30px;
+      height: 30px;
+    }
+    .clear-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: #333;
+      cursor: pointer;
+    }
+    .primary-actions {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin: 20px 0;
+    }
+    .primary-actions .btn {
+      font-weight: bold;
+      border-radius: 12px;
+      padding: 12px 24px;
+    }
+    .glass-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .page-title {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+    .card img {
+      height: 200px;
+      object-fit: cover;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+    }
+    .card-body {
+      padding: 16px;
+    }
+    .card-footer {
+      padding: 12px;
+    }
+    #settings-dropdown {
+      display: none;
+      position: absolute;
+      top: 100%;
+      right: 0;
+      z-index: 1050;
+      min-width: 200px;
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar d-flex justify-content-between align-items-center position-relative">
+    <h1>Welcome to Hauller </h1>
+   <div class="d-flex align-items-center gap-3">
+  <div class="d-flex align-items-center gap-2">
+    <img src="<%= image %>" alt="User Image" class="rounded-circle" style="width: 45px; height: 45px; object-fit: cover; border: 2px solid white;">
+    <span><%= name %></span>
+  </div>
 
-        function confirmDestroyAds() {
-            if (confirm("Are you sure you want to delete all your ads? This action cannot be undone.")) {
-                window.location.href = 'dadd';
-            }
-        }
+      <div class="position-relative">
+        <button class="btn btn-light" onclick="toggleSettingsDropdown()"><i class="fas fa-cog"></i></button>
+        <div id="settings-dropdown" class="card shadow-lg p-3 bg-white text-dark">
+          <div class="d-flex flex-column align-items-start gap-2 p-3 rounded shadow-sm bg-light" style="width: 220px;">
+            <button class="btn btn-outline-primary w-100 d-flex align-items-center gap-2" onclick="window.location.href = 'uacc';">
+              <i class="fas fa-user-edit"></i> Update Account
+            </button>
+            <button class="btn btn-outline-danger w-100 d-flex align-items-center gap-2" onclick="confirmDestroyAccount()">
+              <i class="fas fa-user-times"></i> Destroy Account
+            </button>
+            <button class="btn btn-danger w-100 d-flex align-items-center gap-2" onclick="window.location.href = 'logout';">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-light position-relative" onclick="toggleNotificationPanel()">
+        <i class="fas fa-bell"></i>
+        <span id="notif-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+          <%= notificationCount %>
+        </span>
+      </button>
+      <audio id="notifSound" src="/media/notification.mp3" preload="auto"></audio>
+    </div>
+  </div>
 
-        function confirmDeleteAd() {
-            return confirm("Are you sure you want to delete this ad?");
-        }
-    </script>
-    
+  <form action="/member/search" class="search-container">
+    <input type="text" placeholder="Search..." name="name" id="name" value="<%= typeof search !== 'undefined' ? search : '' %>" required />
+    <button type="submit" class="btn btn-outline-primary"><img src="https://www.freepnglogos.com/uploads/search-png/search-icons-icons-flat-jewels-icon-11.png" alt="Search" /></button>
+    <button type="button" class="clear-btn" onclick="clearSearch()" title="Clear Search">&times;</button>
+  </form>
 
+  <div class="primary-actions">
+    <button class="btn btn-success" onclick="window.location.href = 'uploadview';"><i class="fas fa-plus-circle"></i> Create Ad</button>
+    <button class="btn btn-danger" onclick="confirmDestroyAds()"><i class="fas fa-trash"></i> Destroy Ads</button>
+  </div>
+
+  <div class="glass-card">
+    <div class="page-title">Choose Your Ute</div>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      <% if (data.length > 0) { 
+        data.forEach(function(item) { %>
+        <div class="col">
+          <div class="card h-100">
+            <a href="/member/view/<%= item._id %>">
+              <img src="<%= item.image %>" class="card-img-top" alt="Ute Image">
+            </a>
+            <div class="card-body">
+              <h5 class="card-title"><%= item.name %></h5>
+              <p class="card-text"><%= item.description %></p>
+              <p><strong>Price:</strong> $<%= item.price %></p>
+              <p><strong>Created:</strong> 
+                <% var dObj = new Date(item.timestamp); 
+                  var date = dObj.getDate()+"/"+(dObj.getMonth()+1)+"/"+dObj.getFullYear()+" "+ dObj.getHours()+":"+dObj.getMinutes()+":"+dObj.getSeconds(); %>
+                <%= date %>
+              </p>
+            </div>
+            <% if (item.id == id) { %>
+            <div class="card-footer d-flex flex-wrap gap-2">
+              <a href="/member/delete/<%= item._id %>" class="btn btn-danger btn-sm" onclick="return confirmDeleteAd()">Delete</a>
+              <a href="/member/updatedet/<%= item._id %>" class="btn btn-warning btn-sm">Update Details</a>
+              <a href="/member/updateimg/<%= item._id %>" class="btn btn-primary btn-sm">Update Image</a>
+            </div>
+            <% } else { %>
+            <div class="card-footer d-flex flex-wrap gap-2">
+              <button class="btn btn-success btn-sm" onclick="contactOwner('<%= item._id %>', '<%= item.id %>', '<%= item.name %>')">Contact Owner</button>
+              <a href="/member/chat" class="btn btn-outline-secondary btn-sm">Chat</a>
+            </div>
+            <% } %>
+          </div>
+        </div>
+        <% }) } %>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const socket = io();
+    const currentUserId = "<%= id %>";
+    const username = "<%= name %>";
+    const notifCounter = parseInt("<%= notificationCount %>");
+
+    socket.emit('register-user', currentUserId);
+
+    function contactOwner(adId, ownerId, itemname) {
+      socket.emit('contact-owner', { fromUser: currentUserId, toUser: ownerId, adId, itemname, username });
+      fetch('/member/addnotification', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fromUser: currentUserId, userId: ownerId, title: 'New Contact Request', message: `${username} has contacted you regarding "${itemname}".`, adId })
+      })
+      .then(res => res.json())
+      .then(data => alert("Notification sent to the owner."))
+      .catch(err => console.error("Notification error:", err));
+    }
+
+    socket.on('notify', (data) => {
+      document.getElementById("notif-count").innerText = parseInt(document.getElementById("notif-count").innerText) + 1;
+      const notifDiv = document.createElement('div');
+      notifDiv.innerText = `🔔 ${data.message}`;
+      notifDiv.className = 'alert alert-info position-fixed top-0 end-0 m-3';
+      notifDiv.style.zIndex = '2000';
+      notifDiv.style.minWidth = '250px';
+      document.body.appendChild(notifDiv);
+      setTimeout(() => notifDiv.remove(), 5000);
+      const notifSound = document.getElementById('notifSound');
+      if (notifSound) notifSound.play().catch(e => console.log("Sound blocked:", e));
+    });
+
+    function toggleSettingsDropdown() {
+      const dropdown = document.getElementById("settings-dropdown");
+      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    }
+    function toggleNotificationPanel() {
+      alert("Redirecting to notifications");
+      window.location.href = 'notification';
+    }
+    function confirmDestroyAccount() {
+      if (confirm("Are you sure you want to permanently delete your account?")) window.location.href = 'dacc';
+    }
+    function confirmDestroyAds() {
+      if (confirm("Are you sure you want to delete all your ads?")) window.location.href = 'dadd';
+    }
+    function confirmDeleteAd() {
+      return confirm("Are you sure you want to delete this ad?");
+    }
+    function clearSearch() {
+      document.getElementById('name').value = '';
+      window.location.href = '/member/viewadds';
+    }
+  </script>
 </body>
 </html>
-<!-- <script lang="javascript">
-    
-var oRows = document.getElementById('table').getElementsByTagName('tr');
-var iRowCount = oRows.length;
-
-
-
-</script> -->

@@ -60,42 +60,120 @@ function insertAd(req, form,id)
             collection.insertOne(adData)
           })();
 
-        //insert to db
-    
-         //new id generated //_id.exten ::: for eg: 123123123123.png
-        //u want to show a full details of ad
-        //ip: ad._id
-        //u can get the advertise detail from db using ad id
-        //retrieved ad, u can get ad.image (extension)
-        //_id.extension
-
-        // var newFileNameName = "./public/media/" + adId + "." + extension;
-
-        // //read
-        // fs.readFile(oldPath, function(err, data){
-        //     if(err)
-        //     {
-        //         console.log("Error in upload : ", err)
-        //         return
-        //     }
-        //     //write
-        //     fs.writeFile(newFileNameName, data, function(err){
-        //         if(err)
-        //         {
-        //             console.log("Error in upload2 : ", err)
-        //             return   
-        //         }
-        //     })
-        // })
-
-        /*
-        if( extension === 'png' || extension === 'jpg' )
-        {
-            var newFileName = __dirname + "/media/" + files.adimage.originalFilename;
-        }
-        */
+     
     })
 
+}
+
+// function insertmem(req, form)
+// {
+//     console.log("inside dbmember")
+//     //getting collection
+//     var collection = db.collection("member")
+
+//     form.parse(req, function(err, fields, files){
+//     if (err) {
+//         console.error("Error parsing the form:", err);
+//         return;
+//     }
+
+
+        
+//         console.log("inside formidable function")
+//         //collecting information about the file upload
+//         var oldPath = files.pimage.filepath; //temp location 
+//         var extension = files.pimage.originalFilename.split('.').pop()
+
+//         //adding text to db
+//         var name = fields.name
+//         var email = fields.email
+//         var password=fields.password
+ 
+//         console.log("name : ", name)
+//         console.log("email : ", email)
+//         console.log("password :",password)
+
+ 
+
+//   (async function run() {
+//             const image = oldPath;
+//             const result = await cloudinary.uploader.upload(oldPath);
+//             console.log(`Successfully uploaded ${image}`);
+//             console.log(`> Result: ${result.secure_url}`);
+//             var adData = {
+//             'name' : name,
+//             'email' : email,
+//             'password': password,
+//             'image' : result.secure_url,
+               
+//             }
+//             collection.insertOne(adData)
+//           })();
+
+
+
+      
+//     })
+
+// }
+
+function insertmem(req, form) {
+    console.log("▶️ Inside insertmem controller");
+
+    let collection;
+    try {
+        collection = db.collection("member");
+    } catch (err) {
+        console.error("❌ Failed to get collection:", err);
+        return;
+    }
+
+    form.parse(req, function (err, fields, files) {
+        if (err) {
+            console.error("❌ Error parsing form:", err);
+            return;
+        }
+
+        console.log("📦 Formidable parsing successful");
+
+        // Safely access file
+        if (!files.pimage || !files.pimage.filepath) {
+            console.error("❌ Image file is missing in the upload");
+            return;
+        }
+
+        const oldPath = files.pimage.filepath;
+        const originalFilename = files.pimage.originalFilename || "";
+        const extension = originalFilename.split('.').pop() || "jpg";
+
+        const name = fields.name || "";
+        const email = fields.email || "";
+        const password = fields.password || "";
+
+        console.log(`🧾 Received fields - Name: ${name}, Email: ${email}, Password: ${password}`);
+        console.log(`🖼️ Uploading file from: ${oldPath} (ext: .${extension})`);
+
+        // Async Cloudinary upload and DB insert
+        (async function () {
+            try {
+                const result = await cloudinary.uploader.upload(oldPath);
+                console.log(`✅ Uploaded to Cloudinary: ${result.secure_url}`);
+
+                const adData = {
+                    name: name,
+                    email: email,
+                    password: password,
+                    image: result.secure_url
+                };
+
+                const insertResult = await collection.insertOne(adData);
+                console.log("✅ Data inserted into MongoDB:", insertResult.insertedId);
+
+            } catch (uploadErr) {
+                console.error("❌ Error during Cloudinary upload or MongoDB insert:", uploadErr);
+            }
+        })();
+    });
 }
 
 async function insertNotification(req)
@@ -330,7 +408,8 @@ addCollection.find().toArray(function(err, ads) {
                 data: ads,
                 id: id,
                 name: user.name,
-                notificationCount: count
+                notificationCount: count,
+                image: user.image
             });
         });
     });
@@ -585,6 +664,74 @@ function getTimeAgo(date) {
            res.render("member-updateacc" , {data:stdata})
         })
     },
+        smemberadds : function(id,zname,res){
+     
+       // var vid = mongodb.ObjectId(id)
+      var g= zname.toLocaleLowerCase()
+      
+
+console.log("g",g)
+      const filter5 = {
+  $or: [
+    { name: { $regex: g, $options: 'i' } },
+    { description: { $regex: g, $options: 'i' } }
+  ]
+};
+      
+       
+
+
+ const addCollection = db.collection("add");
+const notificationCollection = db.collection("member_notifications");
+const memberCollection = db.collection("member");
+
+const userIdObject = { '_id': mongodb.ObjectId(id) };
+const notificationFilter = { 'userId': id };
+
+// Step 1: Fetch all ads
+addCollection.find(filter5).toArray(function(err, ads) {
+    if (err) {
+        console.error("Error fetching ads:", err);
+        return res.status(500).send("Error fetching ads");
+    }
+
+    // Step 2: Fetch user details
+    memberCollection.findOne(userIdObject, function(err, user) {
+        if (err || !user) {
+            console.error("Error fetching user:", err);
+            return res.render("member-viewadds", {
+                title: "View Page",
+                data: ads,
+                id: id,
+                name: "Unknown User",
+                notificationCount: 0
+            });
+        }
+
+        // Step 3: Count notifications
+        notificationCollection.countDocuments(notificationFilter, function(err, count) {
+            if (err) {
+                console.error("Error counting notifications:", err);
+                count = 0;
+             
+            }
+   console.log("notification count:", count);
+   console.log("ads search:", ads)
+            // Step 4: Render page with all data
+            return res.render("member-viewadds", {
+                title: "View Page",
+                data: ads,
+                id: id,
+                name: user.name,
+                notificationCount: count
+            });
+        });
+    });
+});
+
+
+
+    },
 
     uaccpost : function(req,res){
         var id = req.body.id
@@ -622,4 +769,4 @@ function getTimeAgo(date) {
 
 }
 
-    module.exports = {dbController,loginmember,insertAd,getbyid,insertimg,insertNotification}
+    module.exports = {dbController,loginmember,insertAd,getbyid,insertimg,insertNotification,insertmem}

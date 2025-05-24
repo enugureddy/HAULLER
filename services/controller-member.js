@@ -35,15 +35,15 @@ console.log("currentloginuser:",req.session.member._id.toString())
         res.render("member-register",{title : "Member Register Page"})
     },
 
-    registerpost : function(req,res){
-        var memberdata = {
-            name : req.body.name,
-            email : req.body.email,
-            password : req.body.password
-        }
-        dbController.dbController.addmember(memberdata)
-        console.log("member details Added")
-        res.redirect("/member")
+    registerpost : async function(req,res){
+      
+        console.log("inside register function")
+        var form = new formidable.IncomingForm();
+        dbController.insertmem(req,form) 
+        var data = currlogin
+       await res.redirect("/member")
+
+       
     },
     
     forgotpassword : function(req, res){
@@ -211,7 +211,12 @@ var id=req.params.id
         dbController.dbController.retrieveusers(req.session.member._id,res)
        
 },
-
+search : function(req,res){
+    //var   aname = name
+    var id= req.session.member._id.toString()
+  var zname=req.query.name
+     dbController.dbController.smemberadds(id,zname,res)
+  },
 
 
 

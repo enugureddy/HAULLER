@@ -98,7 +98,7 @@
 </head>
 
 <body>
-    <form action="/Member/registerpost" method="post" class="formdes">
+    <form action="/member/registerpost" method="post" class="formdes" enctype="multipart/form-data">
         <h3>Member Registration</h3>
         
         <div class="mb-3">
@@ -119,6 +119,12 @@
             <div class="password-info">Password must be 5-10 characters long</div>
         </div>
         
+
+
+            <div class="mb-3">
+                <label> File </label>
+                <input type="file" class="form-control" name="pimage" id="pimage" accept="image/*" placeholder="Upload image"  />
+            </div>
         <button type="submit" class="btn btn-primary">Register</button>
     </form>
 
