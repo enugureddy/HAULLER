@@ -3,7 +3,7 @@ const http = require('http');
 const { Server } = require('socket.io');
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server); // ✅ correct socket.io setup
+const io = new Server(server); //  socket.io setup
 
 const session=require('express-session')
 const formidable = require('formidable')
@@ -53,12 +53,12 @@ app.use("/guest",guest)
 
 app.use(express.static('upload'));
 app.use(express.static('public'));
-// app.get('/api/student', (req, res) => {
-//   res.json({
-//     name: "Enugu Thirumal Reddy",
-//     studentId: "s224849242"
-//   });
-// });
+app.get('/api/student', (req, res) => {
+  res.json({
+    name: "Enugu Thirumal Reddy",
+    studentId: "s224849242"
+  });
+});
 
 var memberroute = require("./services/routes-member")
 
