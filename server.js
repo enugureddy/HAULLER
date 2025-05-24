@@ -59,6 +59,12 @@ app.use(express.static('public'));
 //     studentId: "s224849242"
 //   });
 // });
+app.get('/api/student', (req, res) => {
+  res.json({
+    name: "Thirumal Reddy Enugu",
+    studentId: "s224849242"
+  });
+});
 
 var memberroute = require("./services/routes-member")
 

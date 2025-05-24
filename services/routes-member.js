@@ -23,7 +23,7 @@ member.get('/api/student', (req, res) => {
   });
 });
 
-
+member.route("/chat").get(isAdminLoggedIn,controller.chat)
    // member.route('/uploadview').get(controller.uploadview)
    // member.route('/uploadaction').post(controller.uploadaction)
    member.route("/uploadview").get(isAdminLoggedIn,controller.uploadView)
