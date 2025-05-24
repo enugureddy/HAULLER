@@ -3,84 +3,214 @@
 <head>
   <meta charset="UTF-8" />
   <title><%= data.name %> - Ad</title>
+
+  <!-- Bootstrap + Fonts + Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Open Sans', sans-serif;
-      background-color: #f0f2f5;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
+    :root {
+      --porter-blue: #0052CC;
+      --light-grey: #F5F7FA;
+      --charcoal: #2E2E2E;
     }
 
-    .ad-card {
-      background-color: #fff;
-      width: 100%;
-      max-width: 900px;
-      height: 80vh;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background-color: var(--light-grey);
+      font-family: 'Open Sans', sans-serif;
       display: flex;
       flex-direction: column;
     }
 
-    .ad-image {
-      flex: 1.2;
-      background-color: #000;
+    /* Header */
+    .main-header {
+      background-color: var(--porter-blue);
+      width: 100%;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .main-header h2 {
+      margin: 0;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+    }
+
+    .user-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .user-actions button {
+      border: none;
+      background: white;
+      color: var(--porter-blue);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Content Wrapper */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem;
+    }
+
+    .ad-card-container {
+      max-width: 960px;
+      width: 100%;
+      background-color: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+      display: flex;
+      flex-direction: column;
     }
 
     .ad-image img {
       width: 100%;
-      height: 100%;
+      height: 420px;
       object-fit: cover;
     }
 
     .ad-details {
-      flex: 1;
       padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
     }
 
     .ad-details h1 {
+      font-family: 'Montserrat', sans-serif;
       font-size: 2rem;
-      color: #1c1e21;
-      margin: 0 0 1rem;
+      margin-bottom: 1rem;
+      color: var(--charcoal);
     }
 
-    .ad-details h2 {
-      font-size: 1.25rem;
-      color: #606770;
-      font-weight: normal;
-      margin: 0;
+    .ad-details p {
+      font-size: 1.125rem;
+      margin-bottom: 0.5rem;
+      color: #555;
+    }
+
+    .ad-price {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--porter-blue);
+      margin-top: 1rem;
+    }
+
+    .ad-actions {
+      display: flex;
+      justify-content: space-between;
+      padding: 1rem 2rem 2rem;
+      gap: 1rem;
+    }
+
+    .btn-primary-custom {
+      background-color: var(--porter-blue);
+      color: #fff;
+      font-weight: bold;
+      border-radius: 8px;
+      padding: 10px 20px;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary-custom:hover {
+      background-color: #0041aa;
     }
 
     @media (max-width: 768px) {
-      .ad-card {
-        height: auto;
+      .ad-image img {
+        height: 260px;
       }
 
-      .ad-image {
-        height: 300px;
+      .ad-details {
+        padding: 1.25rem;
+      }
+
+      .ad-details h1 {
+        font-size: 1.5rem;
+      }
+
+      .ad-actions {
+        flex-direction: column;
+        align-items: center;
       }
     }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background: #fff;
+      font-size: 0.9rem;
+      border-top: 1px solid #eee;
+      color: #444;
+    }
+
+    footer a {
+      color: var(--porter-blue);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
   </style>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet" />
 </head>
 <body>
-  <div class="ad-card">
-    <div class="ad-image">
-      <img src="<%= data.image %>" alt="Ad Image" />
+
+  <!-- Header -->
+  <header class="main-header">
+    <h2>Hauller</h2>
+    <div class="user-actions">
+      <button onclick="window.location.href='/member/chat'" title="Chat"><i class="fas fa-comments"></i></button>
+      <button onclick="window.location.href='/notification'" title="Notifications"><i class="fas fa-bell"></i></button>
     </div>
-    <div class="ad-details">
-      <h1><%= data.name %></h1>
-      <h2><%= data.description %></h2>
-       <h2><%= data.price %>$</h2>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <!-- Back Button -->
+    <div class="w-100 text-start mb-3" style="max-width: 960px;">
+      <button class="btn btn-outline-secondary" onclick="window.location.href='/member/viewadds'">
+        <i class="fas fa-arrow-left me-2"></i> Back to Listings
+      </button>
     </div>
-  </div>
+
+    <!-- Ad Card -->
+    <div class="ad-card-container">
+      <div class="ad-image">
+        <img src="<%= data.image %>" alt="Ad Image" />
+      </div>
+      <div class="ad-details">
+        <h1><%= data.name %></h1>
+        <p><%= data.description %></p>
+        <p class="ad-price">$<%= data.price %></p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    &copy; <%= new Date().getFullYear() %> Hauller. No rights reserved. For demonstration purposes only. | SIT 725 – Team 40
+  </footer>
+
+  <script>
+  </script>
 </body>
 </html>

@@ -4,242 +4,298 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Listings</title>
+
+  <!-- Bootstrap + Fonts + Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
   <style>
-   * {
-      box-sizing: border-box;
+    :root {
+      --porter-blue: #0052CC;
+      --light-grey: #F5F7FA;
+      --charcoal: #2E2E2E;
+      --alert-red: #EF4444;
+    }
+
+    html, body {
       margin: 0;
       padding: 0;
-    }
-    body {
-      background: #f4f6f8;
+      width: 100%;
       font-family: 'Montserrat', sans-serif;
-      color: #2c3e50;
-      padding: 20px;
+      background: var(--light-grey);
+      color: var(--charcoal);
     }
-    .navbar {
-      background: #007bff;
-      border-radius: 8px;
-      padding: 16px 24px;
-      margin-bottom: 24px;
-      color: white;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      position: relative;
-    }
-    .navbar h1 {
+
+    .main-header {
+      background-color: var(--porter-blue);
+      width: 100%;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
       margin: 0;
-      font-size: 1.8rem;
     }
-    .search-container {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 20px;
+
+    .dropdown-menu-settings {
+      position: absolute;
+      top: 120%;
+      right: 0;
+      display: none;
+      min-width: 220px;
+      z-index: 1000;
     }
-    .search-container input {
-      border: 1px solid #ccc;
+
+    .dropdown-menu-settings .btn {
+      font-size: 0.95rem;
+      padding: 10px 12px;
       border-radius: 8px;
-      padding: 10px 16px;
-      font-size: 16px;
-      flex: 1;
     }
-    .search-container button img {
-      width: 30px;
-      height: 30px;
+
+    .dropdown-menu-settings .btn-outline-primary:hover {
+      background-color: var(--porter-blue);
+      color: white;
     }
-    .clear-btn {
-      background: none;
-      border: none;
-      font-size: 24px;
-      color: #333;
-      cursor: pointer;
+
+    .dropdown-menu-settings .btn-outline-danger:hover {
+      background-color: var(--alert-red);
+      color: white;
+      border-color: var(--alert-red);
     }
-    .primary-actions {
+
+    .dropdown-menu-settings .btn-danger:hover {
+      background-color: #c82333;
+      border-color: #bd2130;
+    }
+
+    .search-action-wrapper {
+      margin-top: 24px;
       display: flex;
       justify-content: center;
-      gap: 20px;
-      margin: 20px 0;
+      padding: 0 1rem;
+      margin-bottom: 1.5rem;
     }
-    .primary-actions .btn {
-      font-weight: bold;
+
+    .search-action-inner {
+      background-color: white;
       border-radius: 12px;
-      padding: 12px 24px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      padding: 12px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      max-width: 960px;
     }
-    .glass-card {
-      background: white;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+
+    @media (min-width: 768px) {
+      .search-action-inner {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
     }
+
+    .search-action-inner form {
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-action-inner input {
+      flex: 1;
+      border: none;
+      padding: 10px 14px;
+      font-size: 1rem;
+      background-color: transparent;
+    }
+
+    .search-action-inner input:focus {
+      outline: none;
+    }
+
+    .search-action-inner i {
+      color: #aaa;
+      margin-right: 8px;
+    }
+
+    .search-action-inner .btn {
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+
+    .search-action-inner .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
     .page-title {
       font-size: 2rem;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
       font-weight: 700;
+      text-align: left;
+      color: var(--charcoal);
+      padding-left: 1rem;
     }
+
+    .card {
+      border-radius: 12px;
+      overflow: hidden;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
     .card img {
       height: 200px;
       object-fit: cover;
       border-top-left-radius: 12px;
       border-top-right-radius: 12px;
     }
-    .card-body {
-      padding: 16px;
-    }
+
     .card-footer {
+      background-color: #f8f9fa;
       padding: 12px;
+      border-top: 1px solid #eee;
     }
-    #settings-dropdown {
-      display: none;
-      position: absolute;
-      top: 100%;
-      right: 0;
-      z-index: 1050;
-      min-width: 200px;
+
+    .badge.bg-danger {
+      font-size: 0.7rem;
+      padding: 5px 8px;
     }
   </style>
 </head>
 <body>
-  <div class="navbar d-flex justify-content-between align-items-center position-relative">
-    <h1>Welcome to Hauller </h1>
-   <div class="d-flex align-items-center gap-3">
-  <div class="d-flex align-items-center gap-2">
-    <img src="<%= image %>" alt="User Image" class="rounded-circle" style="width: 45px; height: 45px; object-fit: cover; border: 2px solid white;">
-    <span><%= name %></span>
-  </div>
+<%- include('partials/header') %>
 
-      <div class="position-relative">
-        <button class="btn btn-light" onclick="toggleSettingsDropdown()"><i class="fas fa-cog"></i></button>
-        <div id="settings-dropdown" class="card shadow-lg p-3 bg-white text-dark">
-          <div class="d-flex flex-column align-items-start gap-2 p-3 rounded shadow-sm bg-light" style="width: 220px;">
-            <button class="btn btn-outline-primary w-100 d-flex align-items-center gap-2" onclick="window.location.href = 'uacc';">
-              <i class="fas fa-user-edit"></i> Update Account
-            </button>
-            <button class="btn btn-outline-danger w-100 d-flex align-items-center gap-2" onclick="confirmDestroyAccount()">
-              <i class="fas fa-user-times"></i> Destroy Account
-            </button>
-            <button class="btn btn-danger w-100 d-flex align-items-center gap-2" onclick="window.location.href = 'logout';">
-              <i class="fas fa-sign-out-alt"></i> Logout
-            </button>
+<!-- ✅ Search + Action Bar -->
+<div class="search-action-wrapper">
+  <div class="search-action-inner">
+    <!-- Search -->
+    <form action="/member/search">
+      <i class="fas fa-search"></i>
+      <input type="text" name="name" id="name" placeholder="Search for ads..." value="<%= typeof search !== 'undefined' ? search : '' %>" required />
+      <button type="submit" class="btn btn-primary ms-2">Search</button>
+      <button type="button" class="btn btn-outline-secondary ms-2" onclick="clearSearch()" title="Clear Search">&times;</button>
+    </form>
+
+    <!-- Action Buttons -->
+    <div class="d-flex gap-2 justify-content-end">
+      <button class="btn btn-success d-flex align-items-center gap-2 px-3 fw-bold" onclick="window.location.href = 'uploadview';">
+        <i class="fas fa-plus-circle text-white"></i> Create Ad
+      </button>
+      <button class="btn btn-danger d-flex align-items-center gap-2 px-3 fw-bold" onclick="confirmDestroyAds()">
+        <i class="fas fa-trash-alt text-white"></i> Destroy Ads
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ✅ Listings -->
+<div class="px-4 py-3">
+  <h2 class="page-title">Choose Your Ute</h2>
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+
+    <% if (data.length > 0) {
+      data.forEach(function(item) { %>
+      <div class="col">
+        <div class="card h-100">
+          <a href="/member/view/<%= item._id %>">
+            <img src="<%= item.image %>" class="card-img-top" alt="Ute Image">
+          </a>
+          <div class="card-body">
+            <h5 class="card-title"><%= item.name %></h5>
+            <p class="card-text"><%= item.description %></p>
+            <p><strong>Price:</strong> $<%= item.price %></p>
+            <p><strong>Created:</strong> 
+              <% var dObj = new Date(item.timestamp); 
+                var date = dObj.getDate()+"/"+(dObj.getMonth()+1)+"/"+dObj.getFullYear()+" "+ dObj.getHours()+":"+dObj.getMinutes()+":"+dObj.getSeconds(); %>
+              <%= date %>
+            </p>
           </div>
+          <% if (item.id == id) { %>
+          <div class="card-footer d-flex flex-wrap gap-2">
+            <a href="/member/delete/<%= item._id %>" class="btn btn-danger btn-sm" onclick="return confirmDeleteAd()">Delete</a>
+            <a href="/member/updatedet/<%= item._id %>" class="btn btn-warning btn-sm">Update Details</a>
+            <a href="/member/updateimg/<%= item._id %>" class="btn btn-primary btn-sm">Update Image</a>
+          </div>
+          <% } else { %>
+          <div class="card-footer d-flex flex-wrap gap-2">
+            <button class="btn btn-success btn-sm" onclick="contactOwner('<%= item._id %>', '<%= item.id %>', '<%= item.name %>')">Contact Owner</button>
+            <a href="/member/chat" class="btn btn-outline-secondary btn-sm">Chat</a>
+          </div>
+          <% } %>
         </div>
       </div>
-      <button class="btn btn-light position-relative" onclick="toggleNotificationPanel()">
-        <i class="fas fa-bell"></i>
-        <span id="notif-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-          <%= notificationCount %>
-        </span>
-      </button>
-      <audio id="notifSound" src="/media/notification.mp3" preload="auto"></audio>
-    </div>
+    <% }) } %>
+
   </div>
+</div>
 
-  <form action="/member/search" class="search-container">
-    <input type="text" placeholder="Search..." name="name" id="name" value="<%= typeof search !== 'undefined' ? search : '' %>" required />
-    <button type="submit" class="btn btn-outline-primary"><img src="https://www.freepnglogos.com/uploads/search-png/search-icons-icons-flat-jewels-icon-11.png" alt="Search" /></button>
-    <button type="button" class="clear-btn" onclick="clearSearch()" title="Clear Search">&times;</button>
-  </form>
+<!-- ✅ Scripts -->
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const socket = io();
+  const currentUserId = "<%= id %>";
+  const username = "<%= name %>";
 
-  <div class="primary-actions">
-    <button class="btn btn-success" onclick="window.location.href = 'uploadview';"><i class="fas fa-plus-circle"></i> Create Ad</button>
-    <button class="btn btn-danger" onclick="confirmDestroyAds()"><i class="fas fa-trash"></i> Destroy Ads</button>
-  </div>
+  socket.emit('register-user', currentUserId);
 
-  <div class="glass-card">
-    <div class="page-title">Choose Your Ute</div>
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-      <% if (data.length > 0) { 
-        data.forEach(function(item) { %>
-        <div class="col">
-          <div class="card h-100">
-            <a href="/member/view/<%= item._id %>">
-              <img src="<%= item.image %>" class="card-img-top" alt="Ute Image">
-            </a>
-            <div class="card-body">
-              <h5 class="card-title"><%= item.name %></h5>
-              <p class="card-text"><%= item.description %></p>
-              <p><strong>Price:</strong> $<%= item.price %></p>
-              <p><strong>Created:</strong> 
-                <% var dObj = new Date(item.timestamp); 
-                  var date = dObj.getDate()+"/"+(dObj.getMonth()+1)+"/"+dObj.getFullYear()+" "+ dObj.getHours()+":"+dObj.getMinutes()+":"+dObj.getSeconds(); %>
-                <%= date %>
-              </p>
-            </div>
-            <% if (item.id == id) { %>
-            <div class="card-footer d-flex flex-wrap gap-2">
-              <a href="/member/delete/<%= item._id %>" class="btn btn-danger btn-sm" onclick="return confirmDeleteAd()">Delete</a>
-              <a href="/member/updatedet/<%= item._id %>" class="btn btn-warning btn-sm">Update Details</a>
-              <a href="/member/updateimg/<%= item._id %>" class="btn btn-primary btn-sm">Update Image</a>
-            </div>
-            <% } else { %>
-            <div class="card-footer d-flex flex-wrap gap-2">
-              <button class="btn btn-success btn-sm" onclick="contactOwner('<%= item._id %>', '<%= item.id %>', '<%= item.name %>')">Contact Owner</button>
-              <a href="/member/chat" class="btn btn-outline-secondary btn-sm">Chat</a>
-            </div>
-            <% } %>
-          </div>
-        </div>
-        <% }) } %>
-    </div>
-  </div>
+  function contactOwner(adId, ownerId, itemname) {
+    socket.emit('contact-owner', { fromUser: currentUserId, toUser: ownerId, adId, itemname, username });
+    fetch('/member/addnotification', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fromUser: currentUserId, userId: ownerId, title: 'New Contact Request', message: `${username} has contacted you regarding "${itemname}".`, adId })
+    })
+    .then(res => res.json())
+    .then(data => alert("Notification sent to the owner."))
+    .catch(err => console.error("Notification error:", err));
+  }
 
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    const socket = io();
-    const currentUserId = "<%= id %>";
-    const username = "<%= name %>";
-    const notifCounter = parseInt("<%= notificationCount %>");
+  socket.on('notify', (data) => {
+    document.getElementById("notif-count").innerText = parseInt(document.getElementById("notif-count").innerText) + 1;
+    const notifDiv = document.createElement('div');
+    notifDiv.innerText = `🔔 ${data.message}`;
+    notifDiv.className = 'alert alert-info position-fixed top-0 end-0 m-3';
+    notifDiv.style.zIndex = '2000';
+    notifDiv.style.minWidth = '250px';
+    document.body.appendChild(notifDiv);
+    setTimeout(() => notifDiv.remove(), 5000);
+    const notifSound = document.getElementById('notifSound');
+    if (notifSound) notifSound.play().catch(e => console.log("Sound blocked:", e));
+  });
 
-    socket.emit('register-user', currentUserId);
+  function toggleSettingsDropdown() {
+    const dropdown = document.getElementById("settings-dropdown");
+    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+  }
 
-    function contactOwner(adId, ownerId, itemname) {
-      socket.emit('contact-owner', { fromUser: currentUserId, toUser: ownerId, adId, itemname, username });
-      fetch('/member/addnotification', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ fromUser: currentUserId, userId: ownerId, title: 'New Contact Request', message: `${username} has contacted you regarding "${itemname}".`, adId })
-      })
-      .then(res => res.json())
-      .then(data => alert("Notification sent to the owner."))
-      .catch(err => console.error("Notification error:", err));
-    }
+  function toggleNotificationPanel() {
+    alert("Redirecting to notifications");
+    window.location.href = 'notification';
+  }
 
-    socket.on('notify', (data) => {
-      document.getElementById("notif-count").innerText = parseInt(document.getElementById("notif-count").innerText) + 1;
-      const notifDiv = document.createElement('div');
-      notifDiv.innerText = `🔔 ${data.message}`;
-      notifDiv.className = 'alert alert-info position-fixed top-0 end-0 m-3';
-      notifDiv.style.zIndex = '2000';
-      notifDiv.style.minWidth = '250px';
-      document.body.appendChild(notifDiv);
-      setTimeout(() => notifDiv.remove(), 5000);
-      const notifSound = document.getElementById('notifSound');
-      if (notifSound) notifSound.play().catch(e => console.log("Sound blocked:", e));
-    });
+  function confirmDestroyAccount() {
+    if (confirm("Are you sure you want to permanently delete your account?")) window.location.href = 'dacc';
+  }
 
-    function toggleSettingsDropdown() {
-      const dropdown = document.getElementById("settings-dropdown");
-      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-    }
-    function toggleNotificationPanel() {
-      alert("Redirecting to notifications");
-      window.location.href = 'notification';
-    }
-    function confirmDestroyAccount() {
-      if (confirm("Are you sure you want to permanently delete your account?")) window.location.href = 'dacc';
-    }
-    function confirmDestroyAds() {
-      if (confirm("Are you sure you want to delete all your ads?")) window.location.href = 'dadd';
-    }
-    function confirmDeleteAd() {
-      return confirm("Are you sure you want to delete this ad?");
-    }
-    function clearSearch() {
-      document.getElementById('name').value = '';
-      window.location.href = '/member/viewadds';
-    }
-  </script>
+  function confirmDestroyAds() {
+    if (confirm("Are you sure you want to delete all your ads?")) window.location.href = 'dadd';
+  }
+
+  function confirmDeleteAd() {
+    return confirm("Are you sure you want to delete this ad?");
+  }
+
+  function clearSearch() {
+    document.getElementById('name').value = '';
+    window.location.href = '/member/viewadds';
+  }
+</script>
+
+<%- include('partials/footer') %>
 </body>
 </html>

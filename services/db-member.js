@@ -463,7 +463,16 @@ function getTimeAgo(date) {
   if (diff < 86400) return Math.floor(diff / 3600) + ' hours ago';
   return Math.floor(diff / 86400) + ' days ago';
 }
-    res.render('member-viewnotifications', { data: formatted, id: id});
+const notificationFilter = { 'userId': id };
+collection.countDocuments(notificationFilter, function(err, count)  {
+            if (err) {
+                console.error("Error counting notifications:", err);
+                count = 0;
+             
+            }var image
+             var name
+            res.render('member-viewnotifications', { data: formatted, id: id,notificationCount: count,image : image, name:name});})
+   
             });
         });
     },
@@ -723,6 +732,7 @@ addCollection.find(filter5).toArray(function(err, ads) {
                 data: ads,
                 id: id,
                 name: user.name,
+                image: user.image,
                 notificationCount: count
             });
         });
