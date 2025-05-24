@@ -90,6 +90,34 @@ io.on('connection', (socket) => {
         }
     });
 
+     socket.on('joinRoom', ({ senderId, receiverId }) => {
+        const roomId = [senderId, receiverId].sort().join('_');
+        socket.join(roomId);
+        socket.roomId = roomId;
+    });
+
+    socket.on('privateMessage', ({ senderId, receiverId, message,senderName }) => {
+        const roomId = [senderId, receiverId].sort().join('_');
+        io.to(roomId).emit('newMessage', { senderId, message });
+         const targetSocket = userSockets[receiverId];
+        if (targetSocket) {
+            io.to(targetSocket).emit('notify', {
+                message: ` You have a message from  ${senderName}`,
+            });
+        }
+    });
+
+   
+    socket.on('typing', ({ senderId, receiverId ,senderName}) => {
+    const roomId = [senderId, receiverId].sort().join('_');
+    socket.to(roomId).emit('displayTyping', { senderId, senderName });
+});
+
+socket.on('stopTyping', ({ senderId, receiverId }) => {
+    const roomId = [senderId, receiverId].sort().join('_');
+    socket.to(roomId).emit('hideTyping', { senderId });
+});
+
     socket.on('disconnect', () => {
         for (let userId in userSockets) {
             if (userSockets[userId] === socket.id) {

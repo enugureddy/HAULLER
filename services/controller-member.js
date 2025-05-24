@@ -35,15 +35,15 @@ console.log("currentloginuser:",req.session.member._id.toString())
         res.render("member-register",{title : "Member Register Page"})
     },
 
-    registerpost : function(req,res){
-        var memberdata = {
-            name : req.body.name,
-            email : req.body.email,
-            password : req.body.password
-        }
-        dbController.dbController.addmember(memberdata)
-        console.log("member details Added")
-        res.redirect("/member")
+    registerpost : async function(req,res){
+      
+        console.log("inside register function")
+        var form = new formidable.IncomingForm();
+        dbController.insertmem(req,form) 
+        var data = currlogin
+       await res.redirect("/member")
+
+       
     },
     
     forgotpassword : function(req, res){
@@ -156,9 +156,17 @@ console.log("currentloginuser:",req.session.member._id.toString())
         var id = req.params.id
         dbController.dbController.deleteadd(id,res)
     },
+     deletenot :function(req,res,id){
+        var id = req.params.id
+        dbController.dbController.deletenot(id,res)
+    },
     dadd :function(req,res,id){
         var id = req.session.member._id.toString()
         dbController.dbController.dadd(id,res)
+    },
+     dnot :function(req,res,id){
+        var id = req.session.member._id.toString()
+        dbController.dbController.dnot(id,res)
     },
     dacc :function(req,res,id){
         var id = req.session.member._id.toString()
@@ -196,6 +204,19 @@ var id=req.params.id
      res.render("member-viewadds")
  }
 },
+
+    chat: function(req,res){
+        // var id=req.query.otherId;
+        // console.log("id:",id)
+        dbController.dbController.retrieveusers(req.session.member._id,res)
+       
+},
+search : function(req,res){
+    //var   aname = name
+    var id= req.session.member._id.toString()
+  var zname=req.query.name
+     dbController.dbController.smemberadds(id,zname,res)
+  },
 
 
 

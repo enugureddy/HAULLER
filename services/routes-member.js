@@ -32,7 +32,7 @@ member.get('/api/student', (req, res) => {
    member.route("/uploadaction").post(isAdminLoggedIn,controller.uploadAction)
 
    member.route("/delete/:id").get(isAdminLoggedIn,controller.delete)
-
+member.route("/deletenot/:id").get(isAdminLoggedIn,controller.deletenot)
 
    member.route("/updatedet/:id").get(isAdminLoggedIn,controller.updatedet)
 
@@ -43,11 +43,12 @@ member.get('/api/student', (req, res) => {
    member.route("/updatedetpost").post(isAdminLoggedIn,controller.updatedetpost)
    
    member.route("/dadd").get(isAdminLoggedIn,controller.dadd)
+   member.route("/dnot").get(isAdminLoggedIn,controller.dnot)
    member.route("/dacc").get(isAdminLoggedIn,controller.dacc)
    member.route("/uacc").get(isAdminLoggedIn,controller.uacc)
    member.route("/uacc").post(isAdminLoggedIn,controller.uaccpost)
    member.route("/view/:id").get(isAdminLoggedIn,controller.view)
-  
+   member.route('/search').get(controller.search)
     member.route('/logout').get(controller.logout)
 
 }
