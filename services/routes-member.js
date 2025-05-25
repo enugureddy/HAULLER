@@ -16,13 +16,12 @@ module.exports=function(member){
 //        router.post('/addnotification',async (req, res) => {
 //   controller.addnotification(req,res)
     
-// member.route("/chat/:id", (req, res) => {
-//   // For testing: manually simulate different users by query string
-//   const myId = req.session.member._id.toString() || 'user1';
-//   const otherId =  req.params.id || 'user2';
-
-//   res.render("chat", { myId:myId, otherId:otherId });
-// });
+member.get('/api/student', (req, res) => {
+  res.json({
+    name: "Enugu Thirumal Reddy",
+    studentId: "s224849242"
+  });
+});
 member.route("/chat").get(isAdminLoggedIn,controller.chat)
 
    // member.route('/uploadview').get(controller.uploadview)
