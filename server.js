@@ -69,7 +69,9 @@ memberroute(member)
 
 adminroute(admin)
 guestroute(guest)
-
+app.get('/', (req, res) => {
+  res.render('landing');
+});
 const userSockets = {};
 
 io.on('connection', (socket) => {
