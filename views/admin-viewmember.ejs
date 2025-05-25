@@ -1,142 +1,190 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>List of Members - fastr</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Open+Sans&display=swap" rel="stylesheet">
-    
-    <style>
-        body {
-            background:lightblue no-repeat center center fixed;
-            background-size: cover;
-            min-height: 100vh;
-            font-family: 'Open Sans', sans-serif;
-            padding: 20px;
-            color: rgb(0, 0, 0);
-        }
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard – Members | Hauller</title>
 
-        .glass-card {
-            background-color: whitesmoke;
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Open+Sans&display=swap" rel="stylesheet" />
+  <!-- Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
-        .navbar {
-            padding: 15px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-        }
+  <style>
+    :root {
+      --porter-blue: #0052CC;
+      --light-grey: #F5F7FA;
+      --charcoal: #2E2E2E;
+      --hover-blue: #003399;
+      --vibrant-cyan: #00C2FF;
+    }
 
-        h1 {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 700;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            margin-bottom: 0;
-        }
+    body {
+      background: var(--light-grey);
+      font-family: 'Open Sans', sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
 
-        .page-title {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 2rem;
-            font-weight: 600;
-            color: rgb(0, 0, 0);
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            margin: 20px 0;
-        }
+    /* HEADER */
+    .main-header {
+      background-color: var(--porter-blue);
+      color: white;
+      padding: 1.25rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
 
-        .btn-danger {
-            font-weight: bold;
-            transition: all 0.3s ease;
-            padding: 8px 20px;
-        }
+    .main-header h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      margin: 0;
+    }
 
-        .btn-danger:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
+    .btn-logout {
+      background-color: #EF4444;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      color: white;
+      font-weight: bold;
+      transition: 0.3s;
+    }
 
-        .table {
-            width: 100%;
-            color: rgb(0, 0, 0);
-            margin-top: 20px;
-        }
+    .btn-logout:hover {
+      background-color: #cc0000;
+    }
 
-        .table th {
-            font-weight: 700;
-            background-color: rgba(0, 0, 0, 0.2);
-            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
-            text-align: center;
-        }
+    /* MAIN CONTENT */
+    .container-main {
+      flex-grow: 1;
+      padding: 2rem;
+    }
 
-        .table td {
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-            vertical-align: middle;
-            text-align: center;
-        }
+    .glass-card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+      padding: 2rem;
+    }
 
-        .table tr:hover td {
-            background-color: rgba(0, 0, 0, 0.1);
-        }
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--charcoal);
+      margin-bottom: 1.5rem;
+      font-family: 'Montserrat', sans-serif;
+    }
 
-        a {
-            color: #000000;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            padding: 5px 10px;
-            border-radius: 5px;
-            background-color: rgba(255, 255, 255, 0.1);
-        }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
 
-        a:hover {
-            color: #000000;
-            background-color: rgba(255, 255, 255, 0.2);
-            text-decoration: none;
-        }
-    </style>
+    thead {
+      background-color: var(--porter-blue);
+      color: white;
+    }
+
+    th, td {
+      padding: 12px 18px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+    }
+
+    tbody tr:hover {
+      background-color: #f1f5ff;
+    }
+
+    a.view-btn {
+      color: var(--porter-blue);
+      font-weight: 600;
+      text-decoration: none;
+      padding: 6px 14px;
+      border-radius: 5px;
+      background-color: #e7f1ff;
+      transition: 0.2s ease-in-out;
+      display: inline-block;
+    }
+
+    a.view-btn:hover {
+      background-color: var(--porter-blue);
+      color: white;
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background: #fff;
+      font-size: 0.9rem;
+      border-top: 1px solid #eee;
+      color: #444;
+    }
+
+    @media (max-width: 768px) {
+      .section-title {
+        font-size: 1.5rem;
+      }
+
+      .main-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+    }
+  </style>
 </head>
 
 <body>
-    <nav class="navbar glass-card">
-        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-            <h1>Welcome Hauller Admin !</h1>
-            <button class="btn btn-danger" onclick="window.location.href = 'logout';">Logout</button>
-        </div>
-    </nav>
 
+  <!-- HEADER -->
+  <header class="main-header">
+    <h2>Hauller Admin Panel</h2>
+    <button class="btn btn-logout" onclick="window.location.href='logout'"><i class="fas fa-sign-out-alt me-2"></i>Logout</button>
+  </header>
+
+  <!-- MAIN -->
+  <main class="container-main">
     <div class="glass-card">
-        <div class="page-title">Members List</div>
-        
-        <table class="table" id="myTable">
-            <thead>
-                <tr>
-                    <th>User Name</th>
-                    <th>User Email</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% if( data.length > 0 ) { 
-                    data.forEach(function (data){ %>
-                        <tr>
-                            <td><%=data.name%></td>
-                            <td><%=data.email%></td>
-                            <td><a href="/admin/viewmemberadds/<%=data._id%>">View Ads</a></td>
-                        </tr>
-                    <% });
-                } %>
-            </tbody>
-        </table>
-    </div>
+      <div class="section-title">Registered Members</div>
 
-    <!-- jQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <!-- Bootstrap JS Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>User Name</th>
+            <th>User Email</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (data.length > 0) { 
+            data.forEach(function (user) { %>
+              <tr>
+                <td><%= user.name %></td>
+                <td><%= user.email %></td>
+                <td><a class="view-btn" href="/admin/viewmemberadds/<%= user._id %>"><i class="fas fa-eye"></i> View Ads</a></td>
+              </tr>
+          <% }) } else { %>
+              <tr><td colspan="3">No members found.</td></tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    &copy; <%= new Date().getFullYear() %> Hauller. Admin Panel – Team 40, SIT725.
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
