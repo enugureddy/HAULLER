@@ -1,6 +1,6 @@
 const sgMail = require('@sendgrid/mail')
 const url = process.env.SENDGRID_API_KEY
-sgMail.setApiKey(url)
+sgMail.setApiKey(url);
 
 var sendMail = {
     send : function(toEmail, fromEmail, subject, html){

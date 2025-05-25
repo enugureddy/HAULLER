@@ -41,7 +41,7 @@ var dbController = {
             db = database.db("hauller")
             console.log("DB Connected from Guest")
             
-            addContactClicksField
+            addContactClicksField();
         })
     },
     viewmemberadds : function(res){
@@ -54,7 +54,7 @@ var dbController = {
                 console.log("Err in view")
                 return
             }
-            res.render("guest-viewadds", {title: "view tasks", addData : result})
+            res.render("guest-viewadds", {title: "view tasks", addData : ads})
         })
     },
    /*  contact : function(id,res){

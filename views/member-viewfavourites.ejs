@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Listings</title>
+
+  <!-- Bootstrap + Fonts + Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+  <style>
+    :root {
+      --porter-blue: #0052CC;
+      --light-grey: #F5F7FA;
+      --charcoal: #2E2E2E;
+      --alert-red: #EF4444;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      font-family: 'Montserrat', sans-serif;
+      background: var(--light-grey);
+      color: var(--charcoal);
+    }
+
+    .main-header {
+      background-color: var(--porter-blue);
+      width: 100%;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      margin: 0;
+    }
+
+    .dropdown-menu-settings {
+      position: absolute;
+      top: 120%;
+      right: 0;
+      display: none;
+      min-width: 220px;
+      z-index: 1000;
+    }
+
+    .dropdown-menu-settings .btn {
+      font-size: 0.95rem;
+      padding: 10px 12px;
+      border-radius: 8px;
+    }
+
+    .dropdown-menu-settings .btn-outline-primary:hover {
+      background-color: var(--porter-blue);
+      color: white;
+    }
+
+    .dropdown-menu-settings .btn-outline-danger:hover {
+      background-color: var(--alert-red);
+      color: white;
+      border-color: var(--alert-red);
+    }
+
+    .dropdown-menu-settings .btn-danger:hover {
+      background-color: #c82333;
+      border-color: #bd2130;
+    }
+
+    .btn-outline-success.btn-sm {
+      border-width: 2px;
+    }
+    .btn-danger.btn-sm {
+      border-width: 2px;
+    }
+
+
+    .search-action-wrapper {
+      margin-top: 24px;
+      display: flex;
+      justify-content: center;
+      padding: 0 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .search-action-inner {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      padding: 12px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      max-width: 960px;
+    }
+
+    @media (min-width: 768px) {
+      .search-action-inner {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+
+    .search-action-inner form {
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-action-inner input {
+      flex: 1;
+      border: none;
+      padding: 10px 14px;
+      font-size: 1rem;
+      background-color: transparent;
+    }
+
+    .search-action-inner input:focus {
+      outline: none;
+    }
+
+    .search-action-inner i {
+      color: #aaa;
+      margin-right: 8px;
+    }
+
+    .search-action-inner .btn {
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+
+    .search-action-inner .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .page-title {
+      font-size: 2rem;
+      margin-bottom: 24px;
+      font-weight: 700;
+      text-align: left;
+      color: var(--charcoal);
+      padding-left: 1rem;
+    }
+
+    .card {
+      border-radius: 12px;
+      overflow: hidden;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .card img {
+      height: 200px;
+      object-fit: cover;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+    }
+
+    .card-footer {
+      background-color: #f8f9fa;
+      padding: 12px;
+      border-top: 1px solid #eee;
+    }
+
+    .badge.bg-danger {
+      font-size: 0.7rem;
+      padding: 5px 8px;
+    }
+  </style>
+</head>
+<body>
+<%- include('partials/header') %>
+
+<!-- ✅ Search + Action Bar -->
+<div class="search-action-wrapper">
+  <div class="search-action-inner">
+    <!-- Search -->
+    <form action="/member/search">
+      <i class="fas fa-search"></i>
+      <input type="text" name="name" id="name" placeholder="Search for ads..." value="<%= typeof search !== 'undefined' ? search : '' %>" required />
+      <button type="submit" class="btn btn-primary ms-2">Search</button>
+      <button type="button" class="btn btn-outline-secondary ms-2" onclick="clearSearch()" title="Clear Search">&times;</button>
+    </form>
+
+    <!-- Action Buttons -->
+    <div class="d-flex gap-2 justify-content-end">
+      <button class="btn btn-success d-flex align-items-center gap-2 px-3 fw-bold" onclick="window.location.href = 'uploadview';">
+        <i class="fas fa-plus-circle text-white"></i> Create Ad
+      </button>
+      <button class="btn btn-danger d-flex align-items-center gap-2 px-3 fw-bold" onclick="confirmDestroyAds()">
+        <i class="fas fa-trash-alt text-white"></i> Destroy Ads
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ✅ Listings -->
+<div class="px-4 py-3">
+  <h2 class="page-title">Your Wishlist</h2>
+  <a href="/member/viewadds" class="btn btn-outline-primary mb-4 fw-bold">
+    ← Back to All Ads
+  </a>
+
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+    <% if (data.length > 0) {
+      data.forEach(function(item) { %>
+      <div class="col">
+        <div class="card h-100">
+          <a href="/member/view/<%= item._id %>">
+            <img src="<%= item.image %>" class="card-img-top" alt="Ute Image">
+          </a>
+          <div class="card-body">
+            <h5 class="card-title"><%= item.name %></h5>
+            <p class="card-text"><%= item.description %></p>
+            <p><strong>Price:</strong> $<%= item.price %></p>
+            <p><strong><i class="fas fa-fire"></i> Popularity:</strong> <%= item.contactClicks || 0 %> Haul(s)</p>
+            <p><strong>Created:</strong> 
+              <% var dObj = new Date(item.timestamp); 
+                var date = dObj.getDate()+"/"+(dObj.getMonth()+1)+"/"+dObj.getFullYear()+" "+ dObj.getHours()+":"+dObj.getMinutes()+":"+dObj.getSeconds(); %>
+              <%= date %>
+            </p>
+          </div>
+
+          <div class="card-footer d-flex flex-wrap gap-2">
+            <a href="/member/favourites/remove/<%= item._id %>" class="btn btn-danger btn-sm">🗑 Remove</a>
+            <a href="/member/view/<%= item._id %>" class="btn btn-outline-primary btn-sm">View Ad</a>
+          </div>
+        </div>
+      </div>
+    <% }) } else { %>
+      <div class="col-12">
+        <div class="alert alert-info text-center">
+          No favourites yet. Go to <a href="/member/viewadds">Ad Listings</a> to start adding.
+        </div>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+
+
+<!-- ✅ Scripts -->
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const socket = io();
+  const currentUserId = "<%= id %>";
+  const username = "<%= name %>";
+
+  socket.emit('register-user', currentUserId);
+
+  function contactOwner(adId, ownerId, itemname) {
+    fetch(`/member/contactclick/${adId}`, { method: 'POST' })
+      .then(() => {
+        socket.emit('contact-owner', { fromUser: currentUserId, toUser: ownerId, adId, itemname, username });
+        return fetch('/member/addnotification', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fromUser: currentUserId, userId: ownerId, title: 'New Contact Request', message: `${username} has contacted you regarding "${itemname}".`, adId })
+        });
+      })
+      .then(res => res.json())
+      .then(data => alert("Notification sent to the owner."))
+      .catch(err => console.error("Error:", err));
+  }
+
+
+  socket.on('notify', (data) => {
+    document.getElementById("notif-count").innerText = parseInt(document.getElementById("notif-count").innerText) + 1;
+    const notifDiv = document.createElement('div');
+    notifDiv.innerText = `🔔 ${data.message}`;
+    notifDiv.className = 'alert alert-info position-fixed top-0 end-0 m-3';
+    notifDiv.style.zIndex = '2000';
+    notifDiv.style.minWidth = '250px';
+    document.body.appendChild(notifDiv);
+    setTimeout(() => notifDiv.remove(), 5000);
+    const notifSound = document.getElementById('notifSound');
+    if (notifSound) notifSound.play().catch(e => console.log("Sound blocked:", e));
+  });
+
+  function toggleSettingsDropdown() {
+    const dropdown = document.getElementById("settings-dropdown");
+    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+  }
+
+  function toggleNotificationPanel() {
+    alert("Redirecting to notifications");
+    window.location.href = 'notification';
+  }
+
+  function confirmDestroyAccount() {
+    if (confirm("Are you sure you want to permanently delete your account?")) window.location.href = 'dacc';
+  }
+
+  function confirmDestroyAds() {
+    if (confirm("Are you sure you want to delete all your ads?")) window.location.href = 'dadd';
+  }
+
+  function confirmDeleteAd() {
+    return confirm("Are you sure you want to delete this ad?");
+  }
+
+  function clearSearch() {
+    document.getElementById('name').value = '';
+    window.location.href = '/member/viewadds';
+  }
+</script>
+
+<%- include('partials/footer') %>
+</body>
+</html>

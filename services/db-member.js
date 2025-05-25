@@ -384,56 +384,96 @@ var dbController = {
         })
     },
     viewAdds: function(id, res) {
-       const addCollection = db.collection("add");
-const notificationCollection = db.collection("member_notifications");
-const memberCollection = db.collection("member");
+  const addCollection = db.collection("add");
+  const notificationCollection = db.collection("member_notifications");
+  const memberCollection = db.collection("member");
+  const wishlistCollection = db.collection("wishlist");
 
-const userIdObject = { '_id': mongodb.ObjectId(id) };
-const notificationFilter = { 'userId': id };
+  const userIdObject = { '_id': mongodb.ObjectId(id) };
+  const notificationFilter = { 'userId': id };
 
-// Step 1: Fetch all ads
-addCollection.find().sort({ contactClicks: -1, name: 1 }).toArray(function(err, ads) {
+  // Step 1: Fetch all ads (sorted by popularity & name)
+  addCollection.find().sort({ contactClicks: -1, name: 1 }).toArray(function(err, ads) {
     if (err) {
-        console.error("Error fetching ads:", err);
-        return res.status(500).send("Error fetching ads");
+      console.error("Error fetching ads:", err);
+      return res.status(500).send("Error fetching ads");
     }
 
-    // Step 2: Fetch user details
+    // Step 2: Fetch member details
     memberCollection.findOne(userIdObject, function(err, user) {
-        if (err || !user) {
-            console.error("Error fetching user:", err);
-            return res.render("member-viewadds", {
-                title: "View Page",
-                data: ads,
-                id: id,
-                name: "Unknown User",
-                notificationCount: 0
+      if (err || !user) {
+        console.error("Error fetching user:", err);
+        return res.render("member-viewadds", {
+          title: "View Page",
+          data: ads,
+          id: id,
+          name: "Unknown User",
+          notificationCount: 0
+        });
+      }
+
+      // Step 3: Fetch wishlist ad IDs
+      wishlistCollection.find({ memberId: id }).toArray(function(err, favs) {
+        const favIds = favs.map(f => f.adId); // adId is a string
+
+        // Step 4: Mark ads as wishlisted
+        ads.forEach(ad => {
+          ad.isWishlisted = favIds.includes(ad._id.toString());
+        });
+
+        // Step 5: Count notifications
+        notificationCollection.countDocuments(notificationFilter, function(err, count) {
+          if (err) {
+            console.error("Error counting notifications:", err);
+            count = 0;
+          }
+
+          // Step 6: Render page
+          res.render("member-viewadds", {
+            title: "View Page",
+            data: ads,
+            id: id,
+            name: user.name,
+            image: user.image,
+            notificationCount: count
+          });
+        });
+      });
+    });
+  });
+    },
+
+        addToWishlist: async function(memberId, adId) {
+        const favoritesCollection = db.collection("member_favorites");
+        const filter = { memberId, adId };
+
+        // Avoid duplicates
+        const exists = await favoritesCollection.findOne(filter);
+        if (!exists) {
+            await favoritesCollection.insertOne({
+                memberId,
+                adId: mongodb.ObjectId(adId),
+                addedAt: new Date()
             });
         }
-
-        // Step 3: Count notifications
-        notificationCollection.countDocuments(notificationFilter, function(err, count) {
-            if (err) {
-                console.error("Error counting notifications:", err);
-                count = 0;
-             
-            }
-   console.log("notification count:", count);
-            // Step 4: Render page with all data
-            return res.render("member-viewadds", {
-                title: "View Page",
-                data: ads,
-                id: id,
-                name: user.name,
-                notificationCount: count,
-                image: user.image
-            });
-        });
-    });
-});
-
-        
     },
+
+    getWishlist: async function(memberId) {
+        const favoritesCollection = db.collection("member_favorites");
+        const adCollection = db.collection("add");
+
+        const favoriteEntries = await favoritesCollection.find({ memberId }).toArray();
+        const adIds = favoriteEntries.map(entry => mongodb.ObjectId(entry.adId));
+
+        return adCollection.find({ _id: { $in: adIds } }).toArray();
+    },
+
+    removeFromWishlist: async function(memberId, adId) {
+        const favoritesCollection = db.collection("member_favorites");
+        await favoritesCollection.deleteOne({ memberId, adId });
+    },
+
+
         notification: function(id, res) {
         var collection = db.collection("member_notifications");
         
@@ -801,4 +841,13 @@ function getDb() {
   return db;
 }
 
-    module.exports = {dbController,loginmember,insertAd,getbyid,insertimg,insertNotification,insertmem, getDb}
+    module.exports = {
+        dbController,
+        loginmember,
+        insertAd,
+        getbyid,
+        insertimg,
+        insertNotification,
+        insertmem,
+        getDb
+    };

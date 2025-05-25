@@ -65,6 +65,14 @@
       border-color: #bd2130;
     }
 
+    .btn-outline-success.btn-sm {
+      border-width: 2px;
+    }
+    .btn-danger.btn-sm {
+      border-width: 2px;
+    }
+
+
     .search-action-wrapper {
       margin-top: 24px;
       display: flex;
@@ -195,8 +203,11 @@
 <!-- ✅ Listings -->
 <div class="px-4 py-3">
   <h2 class="page-title">Choose Your Ute</h2>
-  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+  <a href="/member/favourites" class="btn btn-outline-dark fw-bold mb-3">
+    ❤️ View Wishlist
+  </a>
 
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
     <% if (data.length > 0) {
       data.forEach(function(item) { %>
       <div class="col">
@@ -215,6 +226,8 @@
               <%= date %>
             </p>
           </div>
+
+          <!-- 🔧 Footer Buttons -->
           <% if (item.id == id) { %>
           <div class="card-footer d-flex flex-wrap gap-2">
             <a href="/member/delete/<%= item._id %>" class="btn btn-danger btn-sm" onclick="return confirmDeleteAd()">Delete</a>
@@ -225,14 +238,18 @@
           <div class="card-footer d-flex flex-wrap gap-2">
             <button class="btn btn-success btn-sm" onclick="contactOwner('<%= item._id %>', '<%= item.id %>', '<%= item.name %>')">Contact Owner</button>
             <a href="/member/chat" class="btn btn-outline-secondary btn-sm">Chat</a>
+            <% if (item.isWishlisted) { %>
+              <a href="/member/favourites/remove/<%= item._id %>" class="btn btn-danger btn-sm">🗑 Remove</a>
+            <% } else { %>
+              <a href="/member/favourites/add/<%= item._id %>" class="btn btn-outline-success btn-sm">❤️ Save</a>
+            <% } %>
           </div>
           <% } %>
         </div>
       </div>
     <% }) } %>
-
   </div>
-</div>
+
 
 <!-- ✅ Scripts -->
 <script src="/socket.io/socket.io.js"></script>

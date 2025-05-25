@@ -11,6 +11,10 @@ module.exports=function(member){
     member.route('/member-forgotpassword').get(controller.forgotpassword)
     member.route('/sendpassword').post(controller.sendpassword)
     member.route("/contactclick/:id").post(controller.incrementContactClicks)
+    member.route("/favourites").get(isAdminLoggedIn, controller.viewFavourites);
+    member.route("/favourites/add/:adId").get(isAdminLoggedIn, controller.addToWishlist);
+    member.route("/favourites/remove/:adId").get(isAdminLoggedIn, controller.removeFromWishlist);
+
     member.route("/viewadds").get(isAdminLoggedIn,controller.viewadds) 
     member.route("/notification").get(isAdminLoggedIn,controller.notification)
       member.route("/addnotification").post(isAdminLoggedIn,controller.addnotification)
