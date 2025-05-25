@@ -1,6 +1,6 @@
 const dbController = require("./db-guest")
 const emailController = require("./mail-service")
-
+const { getDb } = require("../services/db-member");
 dbController.dbController.connection()
 
 var controller ={
@@ -15,6 +15,25 @@ var controller ={
         // var id = req.params.id
          dbController.dbController.viewmemberadds(res)
      },
+
+    incrementContactClicks: async function(req, res) {
+        const id = req.params.id;
+        await collection.updateOne({ _id: require('mongodb').ObjectId(id) }, { $inc: { contactClicks: 1 } });
+        res.sendStatus(200);
+     },
+//
+     viewmemberadds: async function(req, res) {
+        try {
+            const db = getDb();
+            const ads = await getDb().collection("add").find().toArray();
+            res.render("guest-viewadds", { title: "Browse Ads", addData: ads });
+        } catch (err) {
+            console.error("Error fetching ads for guest:", err);
+            res.status(500).send("Server error");
+        }
+     },
+
+
      view:async function(req,res){
         var id=req.params.id
          var ad= await dbController.getbyid(id)

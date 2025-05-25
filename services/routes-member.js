@@ -10,19 +10,24 @@ module.exports=function(member){
     member.route("/registerpost").post(controller.registerpost)
     member.route('/member-forgotpassword').get(controller.forgotpassword)
     member.route('/sendpassword').post(controller.sendpassword)
+    member.route("/contactclick/:id").post(controller.incrementContactClicks)
+    member.route("/favourites").get(isAdminLoggedIn, controller.viewFavourites);
+    member.route("/favourites/add/:adId").get(isAdminLoggedIn, controller.addToWishlist);
+    member.route("/favourites/remove/:adId").get(isAdminLoggedIn, controller.removeFromWishlist);
+
     member.route("/viewadds").get(isAdminLoggedIn,controller.viewadds) 
     member.route("/notification").get(isAdminLoggedIn,controller.notification)
       member.route("/addnotification").post(isAdminLoggedIn,controller.addnotification)
+      
 //        router.post('/addnotification',async (req, res) => {
 //   controller.addnotification(req,res)
     
-// member.route("/chat/:id", (req, res) => {
-//   // For testing: manually simulate different users by query string
-//   const myId = req.session.member._id.toString() || 'user1';
-//   const otherId =  req.params.id || 'user2';
-
-//   res.render("chat", { myId:myId, otherId:otherId });
-// });
+member.get('/api/student', (req, res) => {
+  res.json({
+    name: "Enugu Thirumal Reddy",
+    studentId: "s224849242"
+  });
+});
 member.route("/chat").get(isAdminLoggedIn,controller.chat)
 
    // member.route('/uploadview').get(controller.uploadview)
@@ -39,7 +44,7 @@ member.route("/deletenot/:id").get(isAdminLoggedIn,controller.deletenot)
 
    member.route("/updateimg/:id").get(isAdminLoggedIn,controller.updateimg)
 
-   member.route("/updateimgpost").post(isAdminLoggedIn,controller.updateimgpost)
+   member.route("/updateimgpost/:id").post(isAdminLoggedIn,controller.updateimgpost)
 
    member.route("/updatedetpost").post(isAdminLoggedIn,controller.updatedetpost)
    
@@ -49,7 +54,7 @@ member.route("/deletenot/:id").get(isAdminLoggedIn,controller.deletenot)
    member.route("/uacc").get(isAdminLoggedIn,controller.uacc)
    member.route("/uacc").post(isAdminLoggedIn,controller.uaccpost)
    member.route("/view/:id").get(isAdminLoggedIn,controller.view)
-  
+   member.route('/search').get(controller.search)
     member.route('/logout').get(controller.logout)
 
 }
