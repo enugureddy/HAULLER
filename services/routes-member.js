@@ -14,6 +14,7 @@ module.exports=function(member){
     member.route("/viewadds").get(isAdminLoggedIn,controller.viewadds) 
     member.route("/notification").get(isAdminLoggedIn,controller.notification)
       member.route("/addnotification").post(isAdminLoggedIn,controller.addnotification)
+      
 //        router.post('/addnotification',async (req, res) => {
 //   controller.addnotification(req,res)
     

@@ -17,6 +17,10 @@ var controller ={
         var email = req.body.email
         var password = req.body.password
 
+        if (!email || !password || !email.includes("@") || password.length < 6) {
+            return res.status(400).send("Invalid input");
+        }
+
         var data = await dbController.loginmember(email, password)
        
       
@@ -29,7 +33,7 @@ console.log("currentloginuser:",req.session.member._id.toString())
         }
         else
         {
-            res.render("member-login", {title : "Member Login Page"})
+            return res.status(401).render("member-login", {title : "Member Login Page", errorMsg: "Invalid Credentials"})
         }
     },
     register : function(req,res){
@@ -82,7 +86,7 @@ console.log("currentloginuser:",req.session.member._id.toString())
 
     notification : function(req,res){
         var id= req.session.member._id.toString()
-        dbController.dbController.notification(id,res)
+        dbController.dbController.notification(id,res);
     },
    
     uploadView : function(req, res){
