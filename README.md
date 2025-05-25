@@ -16,7 +16,7 @@ Hauller is a logistics-based platform that connects users with drivers for trans
 - MVC Model: Followed the Model-View-Controller design pattern using EJS as the view engine.
 - Database: Utilized MongoDB to store and manage application data.
 
-## Features Added:[SUJAY/ROLES BASED ACCESS]
+## SUJAY Sprint 1 Features Added:[ROLES BASED ACCESS]
 
 - Admin Role: 
             -Login authentication
@@ -35,6 +35,38 @@ Hauller is a logistics-based platform that connects users with drivers for trans
 - Database: Utilized MongoDB to manage application data for guest and admin access restriction.
 
 - MVC Model: Followed the Model-View-Controller design pattern using EJS as the view engine.
+
+## SUJAY Sprint 2 Features Added:
+   # [POPULARITY BASED AD SORTING AND DISPLAY]
+
+   -created popularity logic to sort ads based on number of times the service has been contacted
+   -displays popularity count in real-time with descending order ads
+   -tackles equal popularity count by prioritizing alphabetical order
+   -updated Database Schema to store counter for 'contact owner' clicks
+   -maintained MVC structure throughout the feature implementation
+
+   # [KEYWORD BASED SEARCH IMPLEMENTATION]
+
+   -created basic search functionality checking through ad names
+   -tackled issues like case sensitivity
+
+   # [AD WISHLIST WITH ENHANCED MEMBER VIEW]
+
+   -Enabled wishlisting feature for members to save favourite ads.
+   -members can view bookmarked lists in a separate as views page
+   -creation and deletion of wishlisted ads storage for functionality
+   -Empty wishlist view window has engaging body and content for easy user navigation
+
+   # [UNIT TESTING FOR VARIOUS CATEGORIES]
+
+   -Conducted Unit Testing on all features implemented throughout the Sprints
+   -Tests include:
+      authentication test
+      admin tests
+      member tests
+      guest tests
+      ads functionality tests
+      wishlist functionality tests
 
 ---
 
