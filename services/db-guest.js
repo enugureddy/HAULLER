@@ -15,6 +15,21 @@ function getbyid(id)
     return ad
 }
 
+function addContactClicksField() {
+  const collection = db.collection("add");
+  collection.updateMany(
+    { contactClicks: { $exists: false } },
+    { $set: { contactClicks: 0 } },
+    function(err, result) {
+      if (err) {
+        console.log("Error adding contactClicks:", err);
+      } else {
+        console.log("Successfully updated documents:", result.modifiedCount);
+      }
+    }
+  );
+}
+
 var dbController = {
     connection : function(){
         mongoClient.connect(url, function(err, database){
@@ -25,13 +40,16 @@ var dbController = {
             }
             db = database.db("hauller")
             console.log("DB Connected from Guest")
+            
+            addContactClicksField
         })
     },
     viewmemberadds : function(res){
         var collection = db.collection("add")
        // var vid = mongodb.ObjectId(id)
       
-        collection.find().toArray(function(err,result){
+        collection.find().sort({ contactClicks: -1, name: 1 }).toArray(function(err, ads) {
+
             if(err){
                 console.log("Err in view")
                 return

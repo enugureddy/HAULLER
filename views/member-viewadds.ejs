@@ -208,6 +208,7 @@
             <h5 class="card-title"><%= item.name %></h5>
             <p class="card-text"><%= item.description %></p>
             <p><strong>Price:</strong> $<%= item.price %></p>
+            <p><strong><i class="fas fa-fire"></i> Popularity:</strong> <%= item.contactClicks || 0 %> Haul(s)</p>
             <p><strong>Created:</strong> 
               <% var dObj = new Date(item.timestamp); 
                 var date = dObj.getDate()+"/"+(dObj.getMonth()+1)+"/"+dObj.getFullYear()+" "+ dObj.getHours()+":"+dObj.getMinutes()+":"+dObj.getSeconds(); %>
@@ -244,16 +245,20 @@
   socket.emit('register-user', currentUserId);
 
   function contactOwner(adId, ownerId, itemname) {
-    socket.emit('contact-owner', { fromUser: currentUserId, toUser: ownerId, adId, itemname, username });
-    fetch('/member/addnotification', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ fromUser: currentUserId, userId: ownerId, title: 'New Contact Request', message: `${username} has contacted you regarding "${itemname}".`, adId })
-    })
-    .then(res => res.json())
-    .then(data => alert("Notification sent to the owner."))
-    .catch(err => console.error("Notification error:", err));
+    fetch(`/member/contactclick/${adId}`, { method: 'POST' })
+      .then(() => {
+        socket.emit('contact-owner', { fromUser: currentUserId, toUser: ownerId, adId, itemname, username });
+        return fetch('/member/addnotification', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fromUser: currentUserId, userId: ownerId, title: 'New Contact Request', message: `${username} has contacted you regarding "${itemname}".`, adId })
+        });
+      })
+      .then(res => res.json())
+      .then(data => alert("Notification sent to the owner."))
+      .catch(err => console.error("Error:", err));
   }
+
 
   socket.on('notify', (data) => {
     document.getElementById("notif-count").innerText = parseInt(document.getElementById("notif-count").innerText) + 1;

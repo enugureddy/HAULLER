@@ -10,6 +10,7 @@ module.exports=function(member){
     member.route("/registerpost").post(controller.registerpost)
     member.route('/member-forgotpassword').get(controller.forgotpassword)
     member.route('/sendpassword').post(controller.sendpassword)
+    member.route("/contactclick/:id").post(controller.incrementContactClicks)
     member.route("/viewadds").get(isAdminLoggedIn,controller.viewadds) 
     member.route("/notification").get(isAdminLoggedIn,controller.notification)
       member.route("/addnotification").post(isAdminLoggedIn,controller.addnotification)

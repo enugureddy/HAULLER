@@ -333,6 +333,7 @@ function insertimg(req, form, callback) {
 }
 
 
+
  function getbyid(id)
  {
      var collection=db.collection("add")
@@ -342,6 +343,21 @@ function insertimg(req, form, callback) {
      var ad =collection.findOne(filter)
      return ad
  }
+
+function addContactClicksField() {
+  const collection = db.collection("add");
+  collection.updateMany(
+    { contactClicks: { $exists: false } },
+    { $set: { contactClicks: 0 } },
+    function(err, result) {
+      if (err) {
+        console.log("Error adding contactClicks:", err);
+      } else {
+        console.log("Successfully updated documents:", result.modifiedCount);
+      }
+    }
+  );
+}
 
 
 var dbController = {
@@ -354,6 +370,7 @@ var dbController = {
             }
             db = database.db("hauller")
             console.log("DB Connected from member")
+            addContactClicksField();
         })
     },
     addmember : function(data){
@@ -375,7 +392,7 @@ const userIdObject = { '_id': mongodb.ObjectId(id) };
 const notificationFilter = { 'userId': id };
 
 // Step 1: Fetch all ads
-addCollection.find().toArray(function(err, ads) {
+addCollection.find().sort({ contactClicks: -1, name: 1 }).toArray(function(err, ads) {
     if (err) {
         console.error("Error fetching ads:", err);
         return res.status(500).send("Error fetching ads");
@@ -456,6 +473,7 @@ addCollection.find().toArray(function(err, ads) {
       adId: n.adId,
     }));
     console.log("Formatted notifications:", formatted);
+
 function getTimeAgo(date) {
   const diff = (Date.now() - new Date(date)) / 1000;
   if (diff < 60) return 'just now';
@@ -779,4 +797,8 @@ addCollection.find(filter5).toArray(function(err, ads) {
 
 }
 
-    module.exports = {dbController,loginmember,insertAd,getbyid,insertimg,insertNotification,insertmem}
+function getDb() {
+  return db;
+}
+
+    module.exports = {dbController,loginmember,insertAd,getbyid,insertimg,insertNotification,insertmem, getDb}

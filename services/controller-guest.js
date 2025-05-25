@@ -15,6 +15,13 @@ var controller ={
         // var id = req.params.id
          dbController.dbController.viewmemberadds(res)
      },
+
+    incrementContactClicks: async function(req, res) {
+        const id = req.params.id;
+        await collection.updateOne({ _id: require('mongodb').ObjectId(id) }, { $inc: { contactClicks: 1 } });
+        res.sendStatus(200);
+     },
+
      view:async function(req,res){
         var id=req.params.id
          var ad= await dbController.getbyid(id)

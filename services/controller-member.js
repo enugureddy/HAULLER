@@ -2,6 +2,7 @@ const dbController = require("./db-member")
 const emailController = require("./mail-service")
 const formidable = require('formidable')
 const fs = require('fs')
+const { getDb } = require("./db-member");
 
 dbController.dbController.connection()
 var currlogin
@@ -71,6 +72,14 @@ console.log("currentloginuser:",req.session.member._id.toString())
          
         dbController.dbController.viewAdds(id,res)
     },
+
+    incrementContactClicks: async function(req, res) {
+        const id = req.params.id;
+        const collection = require('./db-member').getDb().collection("add");
+        await collection.updateOne({ _id: require('mongodb').ObjectId(id) }, { $inc: { contactClicks: 1 } });
+        res.sendStatus(200);
+    },
+
     notification : function(req,res){
         var id= req.session.member._id.toString()
         dbController.dbController.notification(id,res)
