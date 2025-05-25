@@ -44,7 +44,7 @@ member.route("/deletenot/:id").get(isAdminLoggedIn,controller.deletenot)
 
    member.route("/updateimg/:id").get(isAdminLoggedIn,controller.updateimg)
 
-   member.route("/updateimgpost").post(isAdminLoggedIn,controller.updateimgpost)
+   member.route("/updateimgpost/:id").post(isAdminLoggedIn,controller.updateimgpost)
 
    member.route("/updatedetpost").post(isAdminLoggedIn,controller.updatedetpost)
    

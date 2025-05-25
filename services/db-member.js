@@ -4,6 +4,7 @@ const fs=require('fs')
 //const cloudinary = require('cloudinary').v2
 const cloudinary = require('../config/cloudinary')
 const { notification, dnot } = require('./controller-member')
+const { log } = require('console')
 var url = process.env.MONGO_URI
 var db;
 
@@ -64,6 +65,14 @@ function insertAd(req, form,id)
     })
 
 }
+
+function extractPublicIdFromUrl(imageUrl) {
+  const parts = imageUrl.split('/');
+  const filename = parts[parts.length - 1]; // e.g., "ad_12345_1716712345678.jpg"
+  const publicId = filename.substring(0, filename.lastIndexOf('.')); // remove .jpg or .png
+  return `hauller_ads/${publicId}`;
+}
+
 
 // function insertmem(req, form)
 // {
@@ -295,41 +304,62 @@ userId: req.body.userId, // assuming this is provided
 
 // }
 
-function insertimg(req, form, callback) {
-    form.parse(req, function(err, fields, files) {
-        if (err) {
-            console.log("Form parse error:", err);
-            return callback("Form parse error");
+function insertimg(req, form,id, callback) {
+   const collection = db.collection("add");
+
+  form.parse(req, async function (err, fields, files) {
+    if (err) {
+      console.error("Form parsing error:", err);
+      return callback("Form parsing error");
+    }
+
+    try {
+      const file = files.adimage;
+      if (!file || !file.filepath || !file.originalFilename) {
+        return callback("No image file found");
+      }
+
+     
+
+      // Fetch the ad to get old image URL
+      const ad = await collection.findOne({ '_id':mongodb.ObjectId(id) });
+      console,log("Ad fetched:", ad);
+      if (!ad) {
+        return callback("Advertisement not found");
+      }
+
+      if (ad.imageUrl) {
+        const publicId = extractPublicIdFromUrl(ad.imageUrl);
+        await cloudinary.uploader.destroy(publicId);
+        console.log("Old image deleted from Cloudinary:", publicId);
+      }
+
+      // Upload new image
+      const uploadResult = await cloudinary.uploader.upload(file.filepath, {
+        folder: 'hauller_ads',
+        public_id: `ad_${id}_${Date.now()}`
+      });
+
+      console.log("New image uploaded:", uploadResult.secure_url);
+
+      // Update imageUrl in MongoDB
+      await collection.updateOne(
+        { '_id':mongodb.ObjectId(id)},
+        {
+          $set: {
+            image: uploadResult.secure_url,
+            adDateTime: new Date()
+          }
         }
+      );
 
-        const adId = fields.id;
-        const file = files.adimage;
-        const extension = file.originalFilename.split('.').pop().toLowerCase();
+      callback(null, uploadResult.secure_url); // success
 
-        if (extension !== 'jpg') {
-            return callback("Only JPG files are allowed");
-        }
-
-        const oldPath = file.filepath;
-        const newFileName = "./public/media/" + adId + ".jpg";
-
-        fs.readFile(oldPath, function(err, data) {
-            if (err) {
-                console.log("Error reading file:", err);
-                return callback("Error reading file");
-            }
-
-            fs.writeFile(newFileName, data, function(err) {
-                if (err) {
-                    console.log("Error writing file:", err);
-                    return callback("Error writing file");
-                }
-
-                console.log("Image updated at:", newFileName);
-                callback(null); // success
-            });
-        });
-    });
+    } catch (error) {
+      console.error("Error updating image:", error);
+      callback("Image update failed");
+    }
+  });
 }
 
 

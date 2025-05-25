@@ -227,10 +227,11 @@ console.log("currentloginuser:",req.session.member._id.toString())
     // await res.redirect("/member/viewadds")
     // },
 
-    updateimgpost: async function(req, res) {
+    updateimgpost: async function(req, res,id) {
         var form = new formidable.IncomingForm();
+        var id = req.params.id;
     
-        dbController.insertimg(req, form, function(err) {
+        dbController.insertimg(req, form,id, function(err) {
             if (err) {
                 console.log("Image upload error:", err,req.body.id);
                 return res.render("staff-upload-view1", {
