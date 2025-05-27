@@ -3,6 +3,8 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = 's224849242-node-app:latest'
+        SENDGRID_API_KEY = 'SG.dummykey'
+        DB_CONNECTION = 'mongodb://localhost/test'
     }
 
     stages {
