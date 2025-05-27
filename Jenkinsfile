@@ -9,15 +9,15 @@ pipeline {
         stage('Build') {
             steps {
                 echo '🐳 Building personalized Docker image for Node.js app...'
-                sh 'docker build -t s224849242-node-app:latest .'
+                bat 'docker build -t s224849242-node-app:latest .'
             }
         }
 
         stage('Test') {
             steps {
                 echo '🧪 Running Mocha test suite...'
-                sh 'npm install'  // Ensures test dependencies are present
-                sh 'npm test'     // Runs mocha via npm script
+                bat 'npm install'
+                bat 'npm test'
             }
         }
     }
