@@ -10,9 +10,15 @@ module.exports=function(member){
     member.route("/registerpost").post(controller.registerpost)
     member.route('/member-forgotpassword').get(controller.forgotpassword)
     member.route('/sendpassword').post(controller.sendpassword)
+    member.route("/contactclick/:id").post(controller.incrementContactClicks)
+    member.route("/favourites").get(isAdminLoggedIn, controller.viewFavourites);
+    member.route("/favourites/add/:adId").get(isAdminLoggedIn, controller.addToWishlist);
+    member.route("/favourites/remove/:adId").get(isAdminLoggedIn, controller.removeFromWishlist);
+
     member.route("/viewadds").get(isAdminLoggedIn,controller.viewadds) 
     member.route("/notification").get(isAdminLoggedIn,controller.notification)
       member.route("/addnotification").post(isAdminLoggedIn,controller.addnotification)
+      
 //        router.post('/addnotification',async (req, res) => {
 //   controller.addnotification(req,res)
     
@@ -38,7 +44,7 @@ member.route("/deletenot/:id").get(isAdminLoggedIn,controller.deletenot)
 
    member.route("/updateimg/:id").get(isAdminLoggedIn,controller.updateimg)
 
-   member.route("/updateimgpost").post(isAdminLoggedIn,controller.updateimgpost)
+   member.route("/updateimgpost/:id").post(isAdminLoggedIn,controller.updateimgpost)
 
    member.route("/updatedetpost").post(isAdminLoggedIn,controller.updatedetpost)
    

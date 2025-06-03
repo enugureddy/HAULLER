@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome to Hauller</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Open+Sans:wght@600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --porter-blue: #0052cc;
+      --hover-blue: #003399;
+      --vibrant-cyan: #00c2ff;
+      --green: #28a745;
+      --red: #dc3545;
+      --text-dark: #2e2e2e;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: row;
+      overflow: hidden;
+    }
+
+    .split-left {
+      flex: 1;
+      background: linear-gradient(to bottom right, #0052cc, #007bff);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    .split-left img {
+      width: 650px;
+      height: auto;
+      margin-bottom: 2rem;
+    }
+
+    .split-left p {
+      font-size: 1.4rem;
+      text-align: center;
+      max-width: 480px;
+      font-weight: 600;
+      color: #ffffff;
+      line-height: 1.6;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    }
+
+    .split-right {
+      flex: 1;
+      background-color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .brand-name {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 6rem;
+      font-weight: 900;
+      letter-spacing: 4px;
+      margin-bottom: 2rem;
+      text-transform: uppercase;
+      color: var(--porter-blue);
+      text-shadow: 3px 3px 0 var(--vibrant-cyan), 6px 6px 10px rgba(0,0,0,0.2);
+      position: relative;
+      display: inline-block;
+    }
+
+    .brand-name::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 180px;
+      height: 6px;
+      background: linear-gradient(to right, var(--vibrant-cyan), var(--porter-blue));
+      border-radius: 4px;
+    }
+
+    .auth-buttons {
+      background: #f0f4f9;
+      padding: 2.5rem;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .auth-buttons .btn-login {
+      width: 100%;
+      padding: 16px;
+      font-weight: bold;
+      font-size: 1.2rem;
+      border-radius: 12px;
+      margin: 14px 0;
+      transition: all 0.3s ease;
+      border: none;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    }
+
+    .btn-member {
+      background-color: var(--porter-blue);
+      color: white;
+    }
+
+    .btn-member:hover {
+      background-color: var(--hover-blue);
+      transform: translateY(-2px);
+    }
+
+    .btn-guest {
+      background-color: var(--green);
+      color: white;
+    }
+
+    .btn-guest:hover {
+      background-color: #1e7e34;
+      transform: translateY(-2px);
+    }
+
+    .btn-admin {
+      background-color: goldenrod;
+      color: rgb(255, 255, 255);
+    }
+
+    .btn-admin:hover {
+      background-color: #dadd0e;
+      transform: translateY(-2px);
+    }
+
+    .or-separator {
+      font-size: 1rem;
+      color: #666;
+      margin: 1rem 0;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+
+      .split-left, .split-right {
+        height: 50vh;
+        width: 100%;
+        padding: 1.5rem;
+      }
+
+      .brand-name {
+        font-size: 3rem;
+      }
+
+      .btn-login {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Left Side: Logo & Tagline -->
+  <div class="split-left">
+    <img src="/media/logo.png" alt="Hauller Logo" />
+    <p>Drive your move forward — rent powerful UTEs with confidence. Fast, secure and on your terms.</p>
+  </div>
+
+  <!-- Right Side: Brand Title + Login Box -->
+  <div class="split-right">
+    <h1 class="brand-name">Hauller</h1>
+    <div class="auth-buttons">
+      <button onclick="window.location.href='/member'" class="btn-login btn-member">Login as Member</button>
+      <div class="or-separator">or</div>
+      <button onclick="window.location.href='/guest'" class="btn-login btn-guest">Login as Guest</button>
+      <button onclick="window.location.href='/admin'" class="btn-login btn-admin">Login as Admin</button>
+    </div>
+  </div>
+
+</body>
+</html>

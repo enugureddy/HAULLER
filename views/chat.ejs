@@ -199,6 +199,14 @@
     <div class="user-actions d-flex gap-2">
       <button onclick="window.location.href='/member/chat'"><i class="fas fa-comments"></i></button>
       <button onclick="window.location.href='/notification'"><i class="fas fa-bell"></i></button>
+      <div class="d-flex align-items-center gap-2">
+          <img src="<%= currentUser.image || '/media/image.png' %>" 
+               onerror="this.onerror=null; this.src='/media/default-user.png';"
+               alt="User" 
+               class="rounded-circle"
+               style="width: 36px; height: 36px; object-fit: cover; border: 2px solid #e2e5ea;">
+          <span class="text-white fw-semibold"><%= currentUser.name %></span>
+        </div>
     </div>
   </div>
 
@@ -297,6 +305,13 @@
         socket.emit('stopTyping', { senderId: currentUserId, receiverId: currentChatUserId });
       }, 1000);
     });
+
+    document.getElementById('msgInput').addEventListener('keydown', function (e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault(); // Prevents line break
+    sendMessage();      // Calls the send function
+  }
+});
 
     socket.on('newMessage', ({ senderId, message }) => {
       if (!messages[senderId]) messages[senderId] = [];

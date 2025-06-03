@@ -65,6 +65,14 @@ function insertAd(req, form,id)
 
 }
 
+function extractPublicIdFromUrl(imageUrl) {
+  const parts = imageUrl.split('/');
+  const filename = parts[parts.length - 1]; // e.g., "ad_12345_1716712345678.jpg"
+  const publicId = filename.substring(0, filename.lastIndexOf('.')); // remove .jpg or .png
+  return `hauller_ads/${publicId}`;
+}
+
+
 // function insertmem(req, form)
 // {
 //     console.log("inside dbmember")
@@ -295,42 +303,64 @@ userId: req.body.userId, // assuming this is provided
 
 // }
 
-function insertimg(req, form, callback) {
-    form.parse(req, function(err, fields, files) {
-        if (err) {
-            console.log("Form parse error:", err);
-            return callback("Form parse error");
+function insertimg(req, form,id, callback) {
+   const collection = db.collection("add");
+
+  form.parse(req, async function (err, fields, files) {
+    if (err) {
+      console.error("Form parsing error:", err);
+      return callback("Form parsing error");
+    }
+
+    try {
+      const file = files.adimage;
+      if (!file || !file.filepath || !file.originalFilename) {
+        return callback("No image file found");
+      }
+
+     
+
+      // Fetch the ad to get old image URL
+      const ad = await collection.findOne({ '_id':mongodb.ObjectId(id) });
+      console,log("Ad fetched:", ad);
+      if (!ad) {
+        return callback("Advertisement not found");
+      }
+
+      if (ad.imageUrl) {
+        const publicId = extractPublicIdFromUrl(ad.imageUrl);
+        await cloudinary.uploader.destroy(publicId);
+        console.log("Old image deleted from Cloudinary:", publicId);
+      }
+
+      // Upload new image
+      const uploadResult = await cloudinary.uploader.upload(file.filepath, {
+        folder: 'hauller_ads',
+        public_id: `ad_${id}_${Date.now()}`
+      });
+
+      console.log("New image uploaded:", uploadResult.secure_url);
+
+      // Update imageUrl in MongoDB
+      await collection.updateOne(
+        { '_id':mongodb.ObjectId(id)},
+        {
+          $set: {
+            image: uploadResult.secure_url,
+            adDateTime: new Date()
+          }
         }
+      );
 
-        const adId = fields.id;
-        const file = files.adimage;
-        const extension = file.originalFilename.split('.').pop().toLowerCase();
+      callback(null, uploadResult.secure_url); // success
 
-        if (extension !== 'jpg') {
-            return callback("Only JPG files are allowed");
-        }
-
-        const oldPath = file.filepath;
-        const newFileName = "./public/media/" + adId + ".jpg";
-
-        fs.readFile(oldPath, function(err, data) {
-            if (err) {
-                console.log("Error reading file:", err);
-                return callback("Error reading file");
-            }
-
-            fs.writeFile(newFileName, data, function(err) {
-                if (err) {
-                    console.log("Error writing file:", err);
-                    return callback("Error writing file");
-                }
-
-                console.log("Image updated at:", newFileName);
-                callback(null); // success
-            });
-        });
-    });
+    } catch (error) {
+      console.error("Error updating image:", error);
+      callback("Image update failed");
+    }
+  });
 }
+
 
 
  function getbyid(id)
@@ -343,6 +373,21 @@ function insertimg(req, form, callback) {
      return ad
  }
 
+function addContactClicksField() {
+  const collection = db.collection("add");
+  collection.updateMany(
+    { contactClicks: { $exists: false } },
+    { $set: { contactClicks: 0 } },
+    function(err, result) {
+      if (err) {
+        console.log("Error adding contactClicks:", err);
+      } else {
+        console.log("Successfully updated documents:", result.modifiedCount);
+      }
+    }
+  );
+}
+
 
 var dbController = {
     connection : function(){
@@ -354,6 +399,7 @@ var dbController = {
             }
             db = database.db("hauller")
             console.log("DB Connected from member")
+            addContactClicksField();
         })
     },
     addmember : function(data){
@@ -367,56 +413,96 @@ var dbController = {
         })
     },
     viewAdds: function(id, res) {
-       const addCollection = db.collection("add");
-const notificationCollection = db.collection("member_notifications");
-const memberCollection = db.collection("member");
+  const addCollection = db.collection("add");
+  const notificationCollection = db.collection("member_notifications");
+  const memberCollection = db.collection("member");
+  const wishlistCollection = db.collection("wishlist");
 
-const userIdObject = { '_id': mongodb.ObjectId(id) };
-const notificationFilter = { 'userId': id };
+  const userIdObject = { '_id': mongodb.ObjectId(id) };
+  const notificationFilter = { 'userId': id };
 
-// Step 1: Fetch all ads
-addCollection.find().toArray(function(err, ads) {
+  // Step 1: Fetch all ads (sorted by popularity & name)
+  addCollection.find().sort({ contactClicks: -1, name: 1 }).toArray(function(err, ads) {
     if (err) {
-        console.error("Error fetching ads:", err);
-        return res.status(500).send("Error fetching ads");
+      console.error("Error fetching ads:", err);
+      return res.status(500).send("Error fetching ads");
     }
 
-    // Step 2: Fetch user details
+    // Step 2: Fetch member details
     memberCollection.findOne(userIdObject, function(err, user) {
-        if (err || !user) {
-            console.error("Error fetching user:", err);
-            return res.render("member-viewadds", {
-                title: "View Page",
-                data: ads,
-                id: id,
-                name: "Unknown User",
-                notificationCount: 0
+      if (err || !user) {
+        console.error("Error fetching user:", err);
+        return res.render("member-viewadds", {
+          title: "View Page",
+          data: ads,
+          id: id,
+          name: "Unknown User",
+          notificationCount: 0
+        });
+      }
+
+      // Step 3: Fetch wishlist ad IDs
+      wishlistCollection.find({ memberId: id }).toArray(function(err, favs) {
+        const favIds = favs.map(f => f.adId); // adId is a string
+
+        // Step 4: Mark ads as wishlisted
+        ads.forEach(ad => {
+          ad.isWishlisted = favIds.includes(ad._id.toString());
+        });
+
+        // Step 5: Count notifications
+        notificationCollection.countDocuments(notificationFilter, function(err, count) {
+          if (err) {
+            console.error("Error counting notifications:", err);
+            count = 0;
+          }
+
+          // Step 6: Render page
+          res.render("member-viewadds", {
+            title: "View Page",
+            data: ads,
+            id: id,
+            name: user.name,
+            image: user.image,
+            notificationCount: count
+          });
+        });
+      });
+    });
+  });
+    },
+
+        addToWishlist: async function(memberId, adId) {
+        const favoritesCollection = db.collection("member_favorites");
+        const filter = { memberId, adId };
+
+        // Avoid duplicates
+        const exists = await favoritesCollection.findOne(filter);
+        if (!exists) {
+            await favoritesCollection.insertOne({
+                memberId,
+                adId: mongodb.ObjectId(adId),
+                addedAt: new Date()
             });
         }
-
-        // Step 3: Count notifications
-        notificationCollection.countDocuments(notificationFilter, function(err, count) {
-            if (err) {
-                console.error("Error counting notifications:", err);
-                count = 0;
-             
-            }
-   console.log("notification count:", count);
-            // Step 4: Render page with all data
-            return res.render("member-viewadds", {
-                title: "View Page",
-                data: ads,
-                id: id,
-                name: user.name,
-                notificationCount: count,
-                image: user.image
-            });
-        });
-    });
-});
-
-        
     },
+
+    getWishlist: async function(memberId) {
+        const favoritesCollection = db.collection("member_favorites");
+        const adCollection = db.collection("add");
+
+        const favoriteEntries = await favoritesCollection.find({ memberId }).toArray();
+        const adIds = favoriteEntries.map(entry => mongodb.ObjectId(entry.adId));
+
+        return adCollection.find({ _id: { $in: adIds } }).toArray();
+    },
+
+    removeFromWishlist: async function(memberId, adId) {
+        const favoritesCollection = db.collection("member_favorites");
+        await favoritesCollection.deleteOne({ memberId, adId });
+    },
+
+
         notification: function(id, res) {
         var collection = db.collection("member_notifications");
         
@@ -456,6 +542,7 @@ addCollection.find().toArray(function(err, ads) {
       adId: n.adId,
     }));
     console.log("Formatted notifications:", formatted);
+
 function getTimeAgo(date) {
   const diff = (Date.now() - new Date(date)) / 1000;
   if (diff < 60) return 'just now';
@@ -779,4 +866,17 @@ addCollection.find(filter5).toArray(function(err, ads) {
 
 }
 
-    module.exports = {dbController,loginmember,insertAd,getbyid,insertimg,insertNotification,insertmem}
+function getDb() {
+  return db;
+}
+
+    module.exports = {
+        dbController,
+        loginmember,
+        insertAd,
+        getbyid,
+        insertimg,
+        insertNotification,
+        insertmem,
+        getDb
+    };
