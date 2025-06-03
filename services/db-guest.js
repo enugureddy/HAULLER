@@ -1,6 +1,6 @@
 const mongodb = require('mongodb')
 const mongoClient = require('mongodb').MongoClient
-var url = process.env.MONGO_URI
+var url = process.env.MONGO_URI || 'mongodb://localhost:27017/hauller';
 var db;
 
 

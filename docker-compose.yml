@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+  mongo:
+    image: mongo:5.0
+    container_name: hauller-mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_DATABASE: hauller
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - "27017:27017"
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hauller-app
+    restart: unless-stopped
+
+    # 1. Load everything from your .env file
+    env_file:
+      - .env
+
+    # 2. Override (or set) these specific vars
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/hauller
+      - PORT=4910
+
+    ports:
+      - "4910:4910"
+    depends_on:
+      - mongo
+
+volumes:
+  mongo_data:

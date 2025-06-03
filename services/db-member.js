@@ -4,7 +4,7 @@ const fs=require('fs')
 //const cloudinary = require('cloudinary').v2
 const cloudinary = require('../config/cloudinary')
 const { notification, dnot } = require('./controller-member')
-var url = process.env.MONGO_URI
+var url = process.env.MONGO_URI || 'mongodb://localhost:27017/hauller';
 var db;
 
 function loginmember(email,password){
